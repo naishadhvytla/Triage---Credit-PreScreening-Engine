@@ -1,0 +1,681 @@
+<title>Triage Credit Pre-Screener</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Sans+Condensed:wght@500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+<style>
+/* Layout: a credit-desk console — slim header with lane tabs, then a two-pane workbench (inputs left, verdict right) that stacks on phones. Clarity's Plex type and teal family, so the two apps read as siblings. */
+:root{
+  --paper:#F7F8F7; --surface:#FFFFFF; --surface-2:#F0F2F1; --line:#E1E4E2; --line-strong:#CBD0CD;
+  --ink:#161918; --muted:#626966; --faint:#8F9693;
+  --accent:#0F6E78; --accent-ink:#0B5259; --accent-wash:#E4F0F1;
+  --series-2:#C8571C;
+  --decline:#B23A2E; --decline-wash:#F7E6E3;
+  --human:#94650C; --human-wash:#F6EDDA;
+  --ok:#2F7A55; --ok-wash:#E5F1EA;
+  --shadow:0 1px 2px rgba(18,24,22,.06),0 1px 1px rgba(18,24,22,.04);
+  --sans:'IBM Plex Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --cond:'IBM Plex Sans Condensed','IBM Plex Sans',system-ui,sans-serif;
+  --num:'IBM Plex Mono',ui-monospace,'SFMono-Regular',Menlo,monospace;
+  --r:8px; --r-sm:5px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#121514; --surface:#191D1C; --surface-2:#202524; --line:#2C3230; --line-strong:#3A413F;
+  --ink:#E9ECEA; --muted:#A1A8A5; --faint:#78807D;
+  --accent:#43A9B3; --accent-ink:#7CC6CD; --accent-wash:#16302F;
+  --series-2:#E8874D;
+  --decline:#E2786B; --decline-wash:#3A1F1B;
+  --human:#D9A63F; --human-wash:#352914;
+  --ok:#5DB487; --ok-wash:#15302A;
+  --shadow:0 1px 2px rgba(0,0,0,.3);
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --paper:#121514; --surface:#191D1C; --surface-2:#202524; --line:#2C3230; --line-strong:#3A413F;
+  --ink:#E9ECEA; --muted:#A1A8A5; --faint:#78807D;
+  --accent:#43A9B3; --accent-ink:#7CC6CD; --accent-wash:#16302F;
+  --series-2:#E8874D;
+  --decline:#E2786B; --decline-wash:#3A1F1B;
+  --human:#D9A63F; --human-wash:#352914;
+  --ok:#5DB487; --ok-wash:#15302A;
+  --shadow:0 1px 2px rgba(0,0,0,.3);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font:15px/1.5 var(--sans);-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--surface)}
+.wrap{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{text-wrap:balance;margin:0}
+.num{font-family:var(--num);font-variant-numeric:tabular-nums}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* header */
+header{background:var(--surface);border-bottom:1px solid var(--line);position:sticky;top:env(safe-area-inset-top,0px);z-index:5}
+.bar{display:flex;align-items:center;gap:16px;flex-wrap:wrap;padding-block:12px}
+.brand{display:flex;align-items:center;gap:10px;margin-right:auto}
+.mark{width:30px;height:30px;border-radius:7px;background:var(--accent);display:grid;place-items:center;flex:none}
+.mark svg{display:block}
+.brand b{font-family:var(--cond);font-weight:600;font-size:19px;letter-spacing:.01em}
+.brand small{display:block;color:var(--muted);font-size:12px;line-height:1.2}
+.chip{font-family:var(--num);font-size:11.5px;color:var(--muted);border:1px solid var(--line);padding:3px 8px;border-radius:99px;white-space:nowrap}
+nav{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none}
+nav button{background:none;border:0;padding:8px 12px;border-radius:var(--r-sm);color:var(--muted);font-weight:500;cursor:pointer;white-space:nowrap}
+nav button:hover{background:var(--surface-2);color:var(--ink)}
+nav button[aria-selected="true"]{background:var(--accent-wash);color:var(--accent-ink)}
+
+main{padding-block:24px 56px}
+.lede{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;align-items:flex-end;margin-bottom:20px}
+.lede h1{font-family:var(--cond);font-weight:600;font-size:clamp(24px,3.2vw,32px);line-height:1.15;letter-spacing:-.005em}
+.lede p{margin:6px 0 0;color:var(--muted);max-width:62ch}
+.eyebrow{font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--accent-ink);font-weight:600}
+
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow)}
+.ph{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:14px 18px;border-bottom:1px solid var(--line)}
+.ph h2{font-size:14px;font-weight:600}
+.ph span{font-size:12.5px;color:var(--muted)}
+.pb{padding:18px}
+
+/* score view */
+.bench{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:20px;align-items:start}
+.form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 16px}
+.fieldset-title{grid-column:1/-1;font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--faint);font-weight:600;padding-top:6px;border-top:1px solid var(--line)}
+.fieldset-title:first-child{border-top:0;padding-top:0}
+.f{display:flex;flex-direction:column;gap:5px;min-width:0}
+.f label{font-size:12.5px;color:var(--muted);font-weight:500}
+.f input,.f select{height:38px;padding:0 10px;border:1px solid var(--line-strong);border-radius:var(--r-sm);background:var(--surface);width:100%;min-width:0}
+.f input{font-family:var(--num);font-variant-numeric:tabular-nums}
+.f input:disabled{background:var(--surface-2);color:var(--faint)}
+.f .hint{font-size:11.5px;color:var(--faint)}
+.check{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);cursor:pointer}
+.check input{width:16px;height:16px;accent-color:var(--accent)}
+.presets{display:flex;gap:8px;flex-wrap:wrap}
+.btn{border:1px solid var(--line-strong);background:var(--surface);border-radius:var(--r-sm);padding:7px 12px;font-size:13px;font-weight:500;cursor:pointer}
+.btn:hover{border-color:var(--accent);color:var(--accent-ink)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.primary:hover{background:var(--accent-ink);color:#fff}
+
+.verdict{position:sticky;top:calc(env(safe-area-inset-top,0px) + 78px);display:grid;gap:16px}
+.lane{border-radius:var(--r);padding:18px;border:1px solid}
+.lane.decline{background:var(--decline-wash);border-color:color-mix(in srgb,var(--decline) 35%,transparent)}
+.lane.review{background:var(--accent-wash);border-color:color-mix(in srgb,var(--accent) 30%,transparent)}
+.lane.human{background:var(--human-wash);border-color:color-mix(in srgb,var(--human) 35%,transparent)}
+.lane-tag{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase}
+.lane.decline .lane-tag{color:var(--decline)} .lane.review .lane-tag{color:var(--accent-ink)} .lane.human .lane-tag{color:var(--human)}
+.lane-tag i{width:8px;height:8px;border-radius:50%;background:currentColor}
+.lane h3{font-family:var(--cond);font-size:24px;font-weight:600;margin-top:6px}
+.lane p{margin:6px 0 0;color:var(--muted);font-size:14px;max-width:52ch}
+
+.prob{margin-top:16px}
+.prob-row{display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted)}
+.prob-row b{font-family:var(--num);color:var(--ink);font-size:20px;font-weight:600}
+.track{position:relative;height:12px;border-radius:99px;background:var(--surface-2);margin-top:8px;border:1px solid var(--line)}
+.fill{position:absolute;inset:0 auto 0 0;border-radius:99px;background:var(--ink);opacity:.85;transition:width .25s ease}
+.tick{position:absolute;top:-5px;bottom:-5px;width:2px;background:var(--decline)}
+.tick-l{position:absolute;top:18px;transform:translateX(-50%);font-size:11px;color:var(--decline);font-family:var(--num);white-space:nowrap}
+
+.ratios{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.ratio{background:var(--surface);padding:12px 14px}
+.ratio span{display:block;font-size:11.5px;color:var(--muted)}
+.ratio b{font-family:var(--num);font-size:19px;font-weight:600;font-variant-numeric:tabular-nums}
+.ratio em{display:block;font-style:normal;font-size:11.5px;margin-top:2px}
+.flag-bad{color:var(--decline)} .flag-warn{color:var(--human)} .flag-ok{color:var(--ok)}
+
+.drivers{display:grid;gap:9px}
+.drv{display:grid;grid-template-columns:minmax(0,1fr) 160px;gap:12px;align-items:center;font-size:13px}
+.drv .lbl{min-width:0}
+.drv .lbl b{font-weight:500} .drv .lbl span{color:var(--faint);font-family:var(--num);font-size:12px;margin-left:6px}
+.dbar{position:relative;height:10px}
+.dbar::before{content:"";position:absolute;left:50%;top:-3px;bottom:-3px;width:1px;background:var(--line-strong)}
+.dbar i{position:absolute;top:0;bottom:0;border-radius:3px}
+.legend{display:flex;gap:16px;font-size:12px;color:var(--muted);margin-top:12px;flex-wrap:wrap}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:10px;height:10px;border-radius:2px;display:inline-block}
+
+/* threshold view */
+.kpis{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin-bottom:16px}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px}
+.kpi span{font-size:12px;color:var(--muted);display:block}
+.kpi b{font-family:var(--num);font-size:24px;font-weight:600;display:block;margin-top:2px;font-variant-numeric:tabular-nums}
+.kpi em{font-style:normal;font-size:12px;color:var(--faint)}
+.controls{display:flex;gap:20px 28px;align-items:center;flex-wrap:wrap;margin-bottom:16px}
+.slider{display:flex;align-items:center;gap:12px;flex:1 1 320px}
+.slider input{flex:1;accent-color:var(--accent)}
+.slider output{font-family:var(--num);font-weight:600;font-size:18px;min-width:3.2em}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;padding:4px 10px;border-radius:99px}
+.pill.ok{background:var(--ok-wash);color:var(--ok)} .pill.bad{background:var(--decline-wash);color:var(--decline)}
+.chart-wrap{position:relative}
+.chart-wrap svg{display:block;width:100%;height:auto;overflow:visible}
+.tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--paper);font-size:12px;padding:7px 9px;border-radius:5px;white-space:nowrap;transform:translate(-50%,-110%);font-family:var(--num)}
+.grid2{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:16px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;font-weight:600;color:var(--muted);font-size:12px;padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+td.n,th.n{text-align:right;font-family:var(--num);font-variant-numeric:tabular-nums}
+tr.cur td{background:var(--accent-wash)}
+.tscroll{overflow-x:auto}
+.note{font-size:13px;color:var(--muted);margin:12px 0 0;max-width:70ch}
+
+/* batch view */
+.drop{border:1.5px dashed var(--line-strong);border-radius:var(--r);padding:22px;display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap;background:var(--surface)}
+.drop.over{border-color:var(--accent);background:var(--accent-wash)}
+.drop p{margin:0;color:var(--muted);font-size:14px}
+.drop b{color:var(--ink)}
+.lanebar{display:flex;height:14px;border-radius:99px;overflow:hidden;gap:2px;margin:6px 0 10px}
+.lanebar i{display:block;height:100%}
+.tag{display:inline-block;font-size:11.5px;font-weight:600;padding:2px 8px;border-radius:99px}
+.tag.decline{background:var(--decline-wash);color:var(--decline)}
+.tag.review{background:var(--accent-wash);color:var(--accent-ink)}
+.tag.human{background:var(--human-wash);color:var(--human)}
+.err{color:var(--decline);font-size:13px}
+
+/* about */
+.prose{max-width:68ch}
+.prose p,.prose li{color:var(--ink)}
+.prose h3{font-size:15px;margin:22px 0 6px}
+.facts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+footer{border-top:1px solid var(--line);padding-block:18px;color:var(--faint);font-size:12.5px}
+
+@media (max-width:900px){
+  .bench,.grid2{grid-template-columns:minmax(0,1fr)}
+  .verdict{position:static}
+  .kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .facts{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:520px){
+  .form{grid-template-columns:minmax(0,1fr)}
+  .ratios{grid-template-columns:minmax(0,1fr)}
+  .drv{grid-template-columns:minmax(0,1fr) 90px}
+  .brand small{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<header>
+  <div class="wrap bar">
+    <div class="brand">
+      <div class="mark" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 18 18"><path d="M2 3h14M4.5 9h9M7 15h4" stroke="#fff" stroke-width="2.2" stroke-linecap="round" fill="none"/></svg></div>
+      <div><b>Triage</b><small>Personal-loan pre-screening · Batch 10 · MUC02</small></div>
+    </div>
+    <span class="chip" id="verChip">logreg · AUC 0.867</span>
+    <nav role="tablist" aria-label="Views">
+      <button role="tab" id="t-score" data-view="score" aria-selected="true">Score an application</button>
+      <button role="tab" id="t-threshold" data-view="threshold" aria-selected="false">Threshold</button>
+      <button role="tab" id="t-batch" data-view="batch" aria-selected="false">Batch</button>
+      <button role="tab" id="t-model" data-view="model" aria-selected="false">About the model</button>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+<!-- ========== SCORE ========== -->
+<section id="v-score">
+  <div class="lede">
+    <div>
+      <div class="eyebrow">Single application</div>
+      <h1>Should an analyst spend 25 minutes on this one?</h1>
+      <p>The model never approves. It only takes clear-cut declines out of the manual queue. Everything else, and every applicant with no credit history, goes to a credit analyst.</p>
+    </div>
+    <div class="presets" aria-label="Example applications">
+      <button class="btn" data-preset="decline">Example: clear decline</button>
+      <button class="btn" data-preset="border">Example: borderline</button>
+      <button class="btn" data-preset="ntc">Example: new to credit</button>
+    </div>
+  </div>
+
+  <div class="bench">
+    <div class="panel">
+      <div class="ph"><h2>Application</h2><span>Example values, edit any field</span></div>
+      <form class="pb form" id="appForm" autocomplete="off">
+        <div class="fieldset-title">Applicant</div>
+        <div class="f"><label for="age">Age</label><input id="age" type="number" min="18" max="75" value="31"></div>
+        <div class="f"><label for="employment_type">Employment type</label>
+          <select id="employment_type"><option>Salaried</option><option>Self-Employed Professional</option><option>Business Owner</option><option>Gig / Contract</option></select></div>
+        <div class="f"><label for="years_in_current_job">Years in current job / business</label><input id="years_in_current_job" type="number" step="0.1" min="0" value="2.4"></div>
+        <div class="f"><label for="city_tier">City tier</label>
+          <select id="city_tier"><option value="1">Tier 1 · metro</option><option value="2" selected>Tier 2 · large city</option><option value="3">Tier 3 · smaller city</option></select></div>
+
+        <div class="fieldset-title">Income &amp; credit</div>
+        <div class="f"><label for="monthly_income">Monthly income (₹)</label><input id="monthly_income" type="number" min="0" step="500" value="45000"><span class="hint" id="incHint">Leave blank to use the median for this job type</span></div>
+        <div class="f"><label for="existing_emi">Existing EMIs per month (₹)</label><input id="existing_emi" type="number" min="0" step="500" value="7000"></div>
+        <div class="f"><label for="credit_score">Credit bureau score (300–900)</label><input id="credit_score" type="number" min="300" max="900" value="676"><label class="check" for="ntc"><input type="checkbox" id="ntc"> No credit history (new to credit)</label></div>
+        <div class="f"><label for="delinquencies_24m">Late / missed payments, last 24 months</label><input id="delinquencies_24m" type="number" min="0" value="1"></div>
+        <div class="f"><label for="num_active_loans">Active loans</label><input id="num_active_loans" type="number" min="0" value="2"></div>
+
+        <div class="fieldset-title">Loan requested</div>
+        <div class="f"><label for="loan_purpose">Purpose</label>
+          <select id="loan_purpose"><option>Debt Consolidation</option><option>Home Renovation</option><option>Wedding</option><option>Education</option><option>Consumer Durables</option><option>Medical</option><option>Travel</option></select></div>
+        <div class="f"><label for="loan_amount">Loan amount (₹)</label><input id="loan_amount" type="number" min="10000" step="5000" value="320000"></div>
+        <div class="f"><label for="tenure_months">Tenure (months)</label>
+          <select id="tenure_months"><option>12</option><option>24</option><option selected>36</option><option>48</option><option>60</option></select></div>
+        <div class="f"><label for="proposed_emi">Proposed EMI (₹)</label><input id="proposed_emi" type="number" disabled><span class="hint">Calculated at 14% p.a., as in the bank's data</span></div>
+      </form>
+    </div>
+
+    <div class="verdict" aria-live="polite">
+      <div class="lane review" id="laneCard">
+        <span class="lane-tag" id="laneTag"><i></i><span>Analyst review</span></span>
+        <h3 id="laneTitle">Send to an analyst</h3>
+        <p id="laneText"></p>
+        <div class="prob">
+          <div class="prob-row"><span>Model confidence the credit team would decline</span><b id="probVal">0%</b></div>
+          <div class="track"><div class="fill" id="probFill"></div><div class="tick" id="probTick"></div><span class="tick-l" id="probTickL"></span></div>
+        </div>
+      </div>
+
+      <div class="ratios">
+        <div class="ratio"><span>FOIR (EMIs ÷ income)</span><b id="rFoir">–</b><em id="rFoirE"></em></div>
+        <div class="ratio"><span>Loan ÷ annual income</span><b id="rLti">–</b><em id="rLtiE" class="flag-ok"></em></div>
+        <div class="ratio"><span>Credit score</span><b id="rScore">–</b><em id="rScoreE"></em></div>
+      </div>
+
+      <div class="panel">
+        <div class="ph"><h2>What moved this score</h2><span>Largest contributions</span></div>
+        <div class="pb">
+          <div class="drivers" id="drivers"></div>
+          <div class="legend"><span><i style="background:var(--series-2)"></i>Pushes towards decline</span><span><i style="background:var(--accent)"></i>Pulls towards approval</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== THRESHOLD ========== -->
+<section id="v-threshold" hidden>
+  <div class="lede">
+    <div>
+      <div class="eyebrow">Policy setting</div>
+      <h1>The bank sets the risk limit. The threshold follows from it.</h1>
+      <p>Move the threshold and see the trade-off on the 2,400 held-out test applications, scaled to 3,000 applications a month at 25 minutes of analyst time each. The bank's rule: at most 5% of automatic declines may be people the credit team would have approved.</p>
+    </div>
+  </div>
+
+  <div class="controls">
+    <div class="slider"><label for="thr" style="font-weight:500">Auto-decline at confidence ≥</label><input type="range" id="thr" min="0.5" max="0.99" step="0.01" value="0.90"><output id="thrOut" for="thr">0.90</output></div>
+    <label class="check" for="exNtc"><input type="checkbox" id="exNtc" checked> Always send new-to-credit applicants to an analyst</label>
+    <span class="pill ok" id="rulePill">Within 5% limit</span>
+  </div>
+
+  <div class="kpis">
+    <div class="kpi"><span>Auto-declined</span><b id="kPct">–</b><em id="kPctE"></em></div>
+    <div class="kpi"><span>Applications a month</span><b id="kApps">–</b><em>out of 3,000</em></div>
+    <div class="kpi"><span>Analyst hours freed</span><b id="kHrs">–</b><em>per month</em></div>
+    <div class="kpi"><span>Wrongly declined</span><b id="kWrong">–</b><em>of automatic declines</em></div>
+    <div class="kpi"><span>Good customers turned away</span><b id="kGood">–</b><em>per month, approx.</em></div>
+  </div>
+
+  <div class="grid2">
+    <div class="panel">
+      <div class="ph"><h2>Trade-off across thresholds</h2><span>Test set · hover for values</span></div>
+      <div class="pb">
+        <div class="chart-wrap" id="chartWrap"><svg id="chart" viewBox="0 0 640 300" role="img" aria-label="Line chart: share of applications auto-declined and share of those wrongly declined, by threshold"></svg><div class="tip" id="tip" hidden></div></div>
+        <div class="legend"><span><i style="background:var(--accent)"></i>% of applications auto-declined</span><span><i style="background:var(--series-2)"></i>% of auto-declines the bank approved</span><span><i style="background:var(--muted);height:2px"></i>5% risk limit</span></div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="ph"><h2>Fairness monitor</h2><span>At this threshold</span></div>
+      <div class="pb">
+        <div class="tscroll"><table>
+          <thead><tr><th>Group</th><th class="n">Auto-declined</th><th class="n">Bank approved</th></tr></thead>
+          <tbody id="fairBody"></tbody>
+        </table></div>
+        <p class="note">Gender is not a model input. Income and job type can still act as stand-ins, so the bank should report this table every month after launch.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel" style="margin-top:16px">
+    <div class="ph"><h2>Threshold table</h2><span>The brief's standard cut-offs</span></div>
+    <div class="pb tscroll">
+      <table><thead><tr><th>Threshold</th><th class="n">Auto-declined</th><th class="n">Wrongly declined</th><th class="n">Declines caught</th><th class="n">Apps / month</th><th class="n">Hours / month</th><th>5% rule</th></tr></thead><tbody id="thrBody"></tbody></table>
+    </div>
+  </div>
+</section>
+
+<!-- ========== BATCH ========== -->
+<section id="v-batch" hidden>
+  <div class="lede">
+    <div>
+      <div class="eyebrow">Daily intake</div>
+      <h1>Triage a whole intake file</h1>
+      <p>Upload a CSV with the same columns as the bank's application data. Triage applies the team's cleaning rules, scores every row in your browser and sorts it into a lane. Nothing is uploaded to a server.</p>
+    </div>
+  </div>
+  <div class="drop" id="drop">
+    <p id="dropMsg"><b>Showing the sample batch:</b> 240 applications drawn from the team dataset.</p>
+    <div class="presets">
+      <label class="btn primary" for="file" style="cursor:pointer">Upload CSV</label>
+      <input type="file" id="file" accept=".csv,text/csv" hidden>
+      <button class="btn" id="loadSample">Reload sample</button>
+    </div>
+  </div>
+  <p class="err" id="batchErr" hidden></p>
+
+  <div class="grid2" style="margin-top:16px">
+    <div class="panel">
+      <div class="ph"><h2>Lanes</h2><span id="batchThr"></span></div>
+      <div class="pb">
+        <div class="lanebar" id="laneBar"></div>
+        <div class="tscroll"><table><thead><tr><th>Lane</th><th class="n">Applications</th><th class="n">Share</th></tr></thead><tbody id="laneBody"></tbody></table></div>
+        <p class="note" id="laneHours"></p>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="ph"><h2>Checks against the file</h2><span>When the file has these columns</span></div>
+      <div class="pb tscroll"><table><tbody id="checkBody"></tbody></table></div>
+    </div>
+  </div>
+
+  <div class="panel" style="margin-top:16px">
+    <div class="ph"><h2>Scored applications</h2><span><button class="btn" id="dlCsv">Download scored CSV</button> <button class="btn" id="cpCsv">Copy CSV</button></span></div>
+    <div class="pb tscroll"><table><thead><tr><th>Application</th><th>Employment</th><th class="n">Income ₹</th><th class="n">Score</th><th class="n">FOIR</th><th class="n">Late pmts</th><th class="n">Decline conf.</th><th>Lane</th><th>Bank decision</th></tr></thead><tbody id="rowBody"></tbody></table></div>
+    <p class="note" id="rowNote" style="padding:0 18px 16px"></p>
+  </div>
+</section>
+
+<!-- ========== MODEL ========== -->
+<section id="v-model" hidden>
+  <div class="lede">
+    <div>
+      <div class="eyebrow">Model card</div>
+      <h1>What Triage learned, and where it should not be trusted</h1>
+      <p>A logistic regression trained on 9,600 of the bank's April–September 2026 personal-loan decisions and tested on the other 2,400.</p>
+    </div>
+  </div>
+  <div class="facts" id="facts"></div>
+  <div class="grid2" style="margin-top:16px">
+    <div class="panel">
+      <div class="ph"><h2>Coefficients</h2><span>Scaled features · + pushes towards decline</span></div>
+      <div class="pb"><div class="drivers" id="coefList"></div></div>
+    </div>
+    <div class="panel">
+      <div class="ph"><h2>At the default 0.5 cut-off</h2><span>Test set</span></div>
+      <div class="pb tscroll"><table id="cmTable"></table>
+      <p class="note">At 0.5 the model would decline 225 applicants the bank approved. That is why Triage only auto-declines at a much higher confidence.</p></div>
+    </div>
+  </div>
+  <div class="panel" style="margin-top:16px"><div class="pb prose">
+    <h3 style="margin-top:0">How the lanes work</h3>
+    <p><b>Auto-decline</b> only when the model's decline confidence is at or above the threshold <i>and</i> the applicant has a bureau score. <b>Analyst review</b> for everything else. <b>Analyst only</b> for new-to-credit applicants: the model is right only 56.7% of the time for them (81.2% for scored applicants), and at 0.90 half of those it would auto-decline were approved by the bank.</p>
+    <h3>Cleaning applied to every input</h3>
+    <ul>
+      <li>Monthly incomes above ₹6,00,000 are treated as annual salaries keyed into the monthly field and divided by 12.</li>
+      <li>A blank income is filled with the median for that employment type.</li>
+      <li>A blank credit score means no credit history. The applicant is flagged as new to credit, and the median score fills the gap only inside the model.</li>
+    </ul>
+    <h3>Limitations</h3>
+    <ul>
+      <li>The model learned to copy <b>past analyst decisions, not repayment</b>. Any mistakes or bias in those decisions are built in. Link decisions to repayment outcomes before relying on it.</li>
+      <li>Trained on six months of one bank's simulated data. Re-test on newer applications before live use.</li>
+      <li>Coursework for Calibo AI Academy (Path 2, KLU). The model makes no lending decision about real people.</li>
+    </ul>
+  </div></div>
+</section>
+</main>
+
+<footer><div class="wrap">Triage · Batch 10 · Calibo AI Academy MUC02 · runs entirely in your browser · model <span class="num" id="footVer"></span></div></footer>
+
+<script>
+const MODEL = /*__MODEL__*/null;
+const SAMPLE_CSV = /*__SAMPLE__*/"";
+
+// ---------- model ----------
+const NUM_LABEL = {credit_score:"Credit score", is_ntc:"New to credit", foir:"FOIR", loan_to_income:"Loan ÷ annual income",
+  delinquencies_24m:"Late payments (24m)", num_active_loans:"Active loans", years_in_current_job:"Years in job",
+  age:"Age", tenure_months:"Tenure", city_tier:"City tier"};
+const fmtINR = v => "₹" + Math.round(v).toLocaleString("en-IN");
+const pct = (v, d=1) => (v*100).toFixed(d) + "%";
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+
+function emi(amount, months){ const r = 0.14/12, f = Math.pow(1+r, months); return Math.round(amount*r*f/(f-1)/100)*100; }
+
+function prepare(raw){
+  const r = {...raw};
+  let inc = r.monthly_income;
+  if (inc === null || inc === undefined || inc === "" || isNaN(inc)) { inc = MODEL.income_fill_by_employment[r.employment_type] ?? 50000; r.income_filled = true; }
+  inc = +inc; if (inc > 600000) { inc = inc/12; r.income_annual_fixed = true; }
+  r.monthly_income = inc;
+  const blank = r.credit_score === null || r.credit_score === undefined || r.credit_score === "" || isNaN(r.credit_score);
+  r.is_ntc = blank ? 1 : 0;
+  r.credit_score_model = blank ? MODEL.credit_score_fill : +r.credit_score;
+  r.foir = (+r.existing_emi + +r.proposed_emi) / inc;
+  r.loan_to_income = +r.loan_amount / (inc*12);
+  return r;
+}
+
+function score(raw){
+  const r = prepare(raw);
+  let z = MODEL.intercept; const contrib = [];
+  for (const f of MODEL.numeric){
+    const x = f.name === "credit_score" ? r.credit_score_model : +r[f.name];
+    const c = f.coef * (x - f.mean) / f.scale; z += c;
+    contrib.push({key:f.name, label:NUM_LABEL[f.name], c, x});
+  }
+  for (const f of MODEL.categorical){
+    const c = f.levels[r[f.name]] ?? 0; z += c;
+    contrib.push({key:f.name, label:(f.name==="employment_type"?"Job: ":"Purpose: ")+r[f.name], c});
+  }
+  return {p: 1/(1+Math.exp(-z)), r, contrib};
+}
+function laneOf(p, ntc, t){ return ntc ? "human" : (p >= t ? "decline" : "review"); }
+const LANE = {decline:"Auto-decline", review:"Analyst review", human:"Analyst only · new to credit"};
+
+// ---------- tabs ----------
+const views = ["score","threshold","batch","model"];
+function show(v){
+  views.forEach(x => { document.getElementById("v-"+x).hidden = x!==v; document.getElementById("t-"+x).setAttribute("aria-selected", x===v); });
+  try { localStorage.setItem("triage-view", v); } catch(e){}
+  if (v==="threshold") drawThreshold();
+}
+document.querySelectorAll("nav button").forEach(b => b.addEventListener("click", () => show(b.dataset.view)));
+
+// ---------- score view ----------
+const F = id => document.getElementById(id);
+const PRESETS = {
+  decline:{age:27,employment_type:"Gig / Contract",years_in_current_job:0.8,city_tier:"3",monthly_income:26000,existing_emi:7500,credit_score:612,ntc:false,delinquencies_24m:4,num_active_loans:3,loan_purpose:"Debt Consolidation",loan_amount:300000,tenure_months:"24"},
+  border:{age:31,employment_type:"Salaried",years_in_current_job:2.4,city_tier:"2",monthly_income:45000,existing_emi:7000,credit_score:676,ntc:false,delinquencies_24m:1,num_active_loans:2,loan_purpose:"Debt Consolidation",loan_amount:320000,tenure_months:"36"},
+  ntc:{age:24,employment_type:"Salaried",years_in_current_job:1.1,city_tier:"1",monthly_income:38000,existing_emi:0,credit_score:"",ntc:true,delinquencies_24m:0,num_active_loans:0,loan_purpose:"Consumer Durables",loan_amount:150000,tenure_months:"24"},
+};
+function applyPreset(k){
+  const p = PRESETS[k];
+  for (const [key,v] of Object.entries(p)){ if (key==="ntc") F("ntc").checked = v; else F(key).value = v; }
+  renderScore();
+}
+document.querySelectorAll("[data-preset]").forEach(b => b.addEventListener("click", () => applyPreset(b.dataset.preset)));
+
+function readForm(){
+  const ntc = F("ntc").checked;
+  F("credit_score").disabled = ntc;
+  const amount = +F("loan_amount").value || 0, ten = +F("tenure_months").value;
+  const pe = amount > 0 ? emi(amount, ten) : 0; F("proposed_emi").value = pe;
+  const inc = F("monthly_income").value;
+  return {age:+F("age").value, employment_type:F("employment_type").value, years_in_current_job:+F("years_in_current_job").value,
+    city_tier:+F("city_tier").value, monthly_income: inc === "" ? null : +inc, existing_emi:+F("existing_emi").value || 0,
+    credit_score: ntc ? null : (F("credit_score").value === "" ? null : +F("credit_score").value),
+    delinquencies_24m:+F("delinquencies_24m").value || 0, num_active_loans:+F("num_active_loans").value || 0,
+    loan_purpose:F("loan_purpose").value, loan_amount:amount, tenure_months:ten, proposed_emi:pe};
+}
+
+function renderScore(){
+  const raw = readForm(); const {p, r, contrib} = score(raw); const t = MODEL.threshold;
+  const lane = laneOf(p, r.is_ntc, t);
+  F("incHint").textContent = r.income_filled ? `Blank, so the ${r.employment_type} median (${fmtINR(r.monthly_income)}) is used` :
+    r.income_annual_fixed ? `Above ₹6 lakh: treated as annual, so ${fmtINR(r.monthly_income)} a month` : "Leave blank to use the median for this job type";
+  const card = F("laneCard"); card.className = "lane " + lane;
+  F("laneTag").querySelector("span").textContent = LANE[lane];
+  const conf = Math.round(p*100);
+  if (lane==="decline"){ F("laneTitle").textContent = "Decline automatically"; F("laneText").textContent = `The model is ${conf}% confident the credit team would decline this application, above the ${t.toFixed(2)} threshold. At this threshold fewer than 5 in 100 automatic declines are applicants the bank would have approved.`; }
+  else if (lane==="human"){ F("laneTitle").textContent = "Send to an analyst. The model does not decide."; F("laneText").textContent = `No credit history. The model is barely better than a coin toss for new-to-credit applicants, so they always get a human review. (Model confidence for reference: ${conf}%.)`; }
+  else { F("laneTitle").textContent = "Send to an analyst"; F("laneText").textContent = `The model is ${conf}% confident of a decline. That is below the ${t.toFixed(2)} threshold, so this application needs judgement. The model never approves on its own.`; }
+  F("probVal").textContent = conf + "%";
+  F("probFill").style.width = (p*100).toFixed(1) + "%";
+  F("probFill").style.background = lane==="decline" ? css("--decline") : lane==="human" ? css("--human") : css("--accent");
+  F("probTick").style.left = (t*100) + "%"; F("probTickL").style.left = (t*100) + "%"; F("probTickL").textContent = "threshold " + t.toFixed(2);
+
+  F("rFoir").textContent = pct(r.foir, 0);
+  const fe = F("rFoirE"); if (r.foir > .55){fe.textContent="Above 55%: approvals collapse";fe.className="flag-bad";} else if (r.foir > .5){fe.textContent="50–55%: exception band";fe.className="flag-warn";} else {fe.textContent="Within a 50% limit";fe.className="flag-ok";}
+  F("rLti").textContent = r.loan_to_income.toFixed(2) + "×"; F("rLtiE").textContent = `${fmtINR(r.monthly_income)} a month`;
+  const se = F("rScoreE");
+  if (r.is_ntc){ F("rScore").textContent = "None"; se.textContent = "New to credit"; se.className = "flag-warn"; }
+  else { F("rScore").textContent = r.credit_score; if (r.credit_score < 650){se.textContent="Below the 650 floor";se.className="flag-bad";} else {se.textContent="Above the 650 floor";se.className="flag-ok";} }
+
+  const top = contrib.filter(c => Math.abs(c.c) > 0.005).sort((a,b) => Math.abs(b.c)-Math.abs(a.c)).slice(0,6);
+  const max = Math.max(0.6, ...top.map(c => Math.abs(c.c))) * 1.08;
+  F("drivers").innerHTML = top.map(c => {
+    const w = Math.abs(c.c)/max*50; const pos = c.c > 0;
+    let v = ""; if (c.key==="foir") v = pct(c.x,0); else if (c.key==="credit_score") v = r.is_ntc ? "none" : c.x; else if (c.key==="loan_to_income") v = c.x.toFixed(2)+"×"; else if (c.x!==undefined) v = c.x;
+    return `<div class="drv"><div class="lbl"><b>${c.label}</b><span>${v}</span></div><div class="dbar" title="${c.c.toFixed(2)}"><i style="${pos?`left:50%`:`right:50%`};width:${w}%;background:var(${pos?"--series-2":"--accent"})"></i></div></div>`;
+  }).join("");
+}
+F("appForm").addEventListener("input", renderScore);
+F("appForm").addEventListener("submit", e => e.preventDefault());
+
+// ---------- threshold view ----------
+const T = MODEL.test;
+function stats(t, exNtc){
+  let n = T.p.length, auto=0, wrong=0, caught=0, decl=0, fA=0,fN=0,mA=0,mN=0, fAp=0, mAp=0;
+  for (let i=0;i<n;i++){
+    const a = T.p[i] >= t && !(exNtc && T.ntc[i]);
+    if (T.y[i]===1) decl++;
+    if (a){ auto++; if (T.y[i]===0) wrong++; else caught++; }
+    if (T.female[i]){ fN++; if(a) fA++; if(T.y[i]===0) fAp++; } else { mN++; if(a) mA++; if(T.y[i]===0) mAp++; }
+  }
+  const share = auto/n, apps = share*MODEL.monthly_apps;
+  return {share, wrongRate: auto ? wrong/auto : 0, caught: caught/decl, apps, hours: apps*MODEL.minutes_per_review/60, good: apps*(auto?wrong/auto:0),
+          f: fA/fN, m: mA/mN, fAp: fAp/fN, mAp: mAp/mN};
+}
+const THR_GRID = Array.from({length:50}, (_,i) => +(0.5 + i*0.01).toFixed(2));
+function drawThreshold(){
+  const t = +F("thr").value, ex = F("exNtc").checked; F("thrOut").textContent = t.toFixed(2);
+  const s = stats(t, ex);
+  F("kPct").textContent = pct(s.share); F("kPctE").textContent = `catches ${pct(s.caught,0)} of all declines`;
+  F("kApps").textContent = Math.round(s.apps).toLocaleString("en-IN");
+  F("kHrs").textContent = "~" + Math.round(s.hours);
+  F("kWrong").textContent = pct(s.wrongRate);
+  F("kGood").textContent = "~" + Math.round(s.good);
+  const ok = s.wrongRate <= 0.05 && s.share > 0;
+  const pill = F("rulePill"); pill.className = "pill " + (ok?"ok":"bad"); pill.textContent = ok ? "Within the 5% limit" : "Breaks the 5% limit";
+  F("fairBody").innerHTML = `<tr><td>Female applicants</td><td class="n">${pct(s.f)}</td><td class="n">${pct(s.fAp)}</td></tr><tr><td>Male applicants</td><td class="n">${pct(s.m)}</td><td class="n">${pct(s.mAp)}</td></tr><tr><td>Gap (F − M)</td><td class="n">${((s.f-s.m)*100).toFixed(1)} pts</td><td class="n">${((s.fAp-s.mAp)*100).toFixed(1)} pts</td></tr>`;
+  F("thrBody").innerHTML = [0.5,0.6,0.7,0.8,0.85,0.9,0.95].map(x => { const q = stats(x, ex), good = q.wrongRate<=0.05;
+    return `<tr class="${Math.abs(x-t)<0.001?"cur":""}"><td class="num">${x.toFixed(2)}</td><td class="n">${pct(q.share)}</td><td class="n">${pct(q.wrongRate)}</td><td class="n">${pct(q.caught)}</td><td class="n">${Math.round(q.apps)}</td><td class="n">${Math.round(q.hours)}</td><td><span class="tag ${good?"review":"decline"}">${good?"Meets":"Breaks"}</span></td></tr>`; }).join("");
+  drawChart(t, ex);
+}
+let chartPts = [];
+function drawChart(t, ex){
+  const W=640,H=300,L=44,R=14,Tp=14,B=36, svg=F("chart");
+  const xs = v => L + (v-0.5)/(0.99-0.5)*(W-L-R), ys = v => Tp + (1 - v/50)*(H-Tp-B);
+  chartPts = THR_GRID.map(x => { const q = stats(x, ex); return {x, a:q.share*100, w:q.wrongRate*100}; });
+  const ink = css("--muted"), line = css("--line"), acc = css("--accent"), s2 = css("--series-2"), surf = css("--surface");
+  let g = "";
+  for (const v of [0,10,20,30,40,50]) g += `<line x1="${L}" x2="${W-R}" y1="${ys(v)}" y2="${ys(v)}" stroke="${line}"/><text x="${L-8}" y="${ys(v)+4}" text-anchor="end" font-size="11" fill="${ink}" font-family="IBM Plex Mono, monospace">${v}%</text>`;
+  for (const v of [0.5,0.6,0.7,0.8,0.9]) g += `<text x="${xs(v)}" y="${H-B+18}" text-anchor="middle" font-size="11" fill="${ink}" font-family="IBM Plex Mono, monospace">${v.toFixed(2)}</text>`;
+  g += `<text x="${(L+W-R)/2}" y="${H-2}" text-anchor="middle" font-size="11.5" fill="${ink}">Decline-confidence threshold</text>`;
+  g += `<line x1="${L}" x2="${W-R}" y1="${ys(5)}" y2="${ys(5)}" stroke="${ink}" stroke-dasharray="5 4"/><text x="${L+6}" y="${ys(5)-6}" font-size="11" fill="${ink}">5% limit</text>`;
+  const path = k => chartPts.map((p,i) => (i?"L":"M") + xs(p.x).toFixed(1) + " " + ys(p[k]).toFixed(1)).join(" ");
+  g += `<path d="${path("a")}" fill="none" stroke="${acc}" stroke-width="2"/><path d="${path("w")}" fill="none" stroke="${s2}" stroke-width="2"/>`;
+  const cur = chartPts.reduce((a,b) => Math.abs(b.x-t)<Math.abs(a.x-t)?b:a);
+  g += `<line x1="${xs(t)}" x2="${xs(t)}" y1="${Tp}" y2="${H-B}" stroke="${ink}" stroke-width="1" opacity=".5"/>`;
+  g += `<circle cx="${xs(cur.x)}" cy="${ys(cur.a)}" r="5" fill="${acc}" stroke="${surf}" stroke-width="2"/><circle cx="${xs(cur.x)}" cy="${ys(cur.w)}" r="5" fill="${s2}" stroke="${surf}" stroke-width="2"/>`;
+  g += `<rect x="${L}" y="${Tp}" width="${W-L-R}" height="${H-Tp-B}" fill="transparent" id="hit"/>`;
+  svg.innerHTML = g;
+  const tip = F("tip"), wrap = F("chartWrap");
+  svg.querySelector("#hit").addEventListener("mousemove", e => {
+    const b = svg.getBoundingClientRect(), vx = (e.clientX-b.left)/b.width*W;
+    const v = 0.5 + (vx-L)/(W-L-R)*0.49; const p = chartPts.reduce((a,c) => Math.abs(c.x-v)<Math.abs(a.x-v)?c:a);
+    tip.hidden = false; tip.style.left = (xs(p.x)/W*b.width) + "px"; tip.style.top = (ys(p.a)/H*b.height) + "px";
+    tip.textContent = `${p.x.toFixed(2)} · ${p.a.toFixed(1)}% declined · ${p.w.toFixed(1)}% wrong`;
+  });
+  svg.querySelector("#hit").addEventListener("mouseleave", () => tip.hidden = true);
+}
+F("thr").addEventListener("input", drawThreshold);
+F("exNtc").addEventListener("change", drawThreshold);
+
+// ---------- batch view ----------
+const REQ = ["age","employment_type","years_in_current_job","monthly_income","existing_emi","credit_score","num_active_loans","delinquencies_24m","loan_purpose","loan_amount","tenure_months","proposed_emi","city_tier"];
+let scored = [];
+function runBatch(text, label){
+  const err = F("batchErr"); err.hidden = true;
+  const res = Papa.parse(text.trim(), {header:true, dynamicTyping:true, skipEmptyLines:true});
+  const cols = res.meta.fields || [];
+  const missing = REQ.filter(c => !cols.includes(c));
+  if (missing.length){ err.hidden = false; err.textContent = `This file is missing ${missing.length} required column${missing.length>1?"s":""}: ${missing.join(", ")}. Use the same headers as MUC02_Credit_PreScreening_Dataset.csv.`; return; }
+  const t = MODEL.threshold;
+  scored = res.data.map((row,i) => { const s = score(row); return {...row, _p:s.p, _lane:laneOf(s.p, s.r.is_ntc, t), _foir:s.r.foir, _inc:s.r.monthly_income, _fixed:s.r.income_annual_fixed||false, _filled:s.r.income_filled||false, _id: row.application_id ?? ("row "+(i+1))}; });
+  F("dropMsg").innerHTML = `<b>${label}:</b> ${scored.length.toLocaleString("en-IN")} applications scored.`;
+  F("batchThr").textContent = `Threshold ${t.toFixed(2)} · new to credit → analyst`;
+  const n = scored.length, cnt = k => scored.filter(r => r._lane===k).length;
+  const lanes = [["decline","--decline"],["review","--accent"],["human","--human"]].map(([k,c]) => ({k,c,v:cnt(k)}));
+  F("laneBar").innerHTML = lanes.filter(l=>l.v).map(l => `<i style="width:${l.v/n*100}%;background:var(${l.c})" title="${LANE[l.k]}"></i>`).join("");
+  F("laneBody").innerHTML = lanes.map(l => `<tr><td><span class="tag ${l.k}">${LANE[l.k]}</span></td><td class="n">${l.v}</td><td class="n">${pct(l.v/n)}</td></tr>`).join("");
+  const dec = cnt("decline");
+  F("laneHours").textContent = `${dec} automatic declines save about ${Math.round(dec*MODEL.minutes_per_review/60)} analyst hours on this file (25 minutes each).`;
+  const rows = [];
+  rows.push(["Incomes treated as annual (÷12)", scored.filter(r=>r._fixed).length]);
+  rows.push(["Blank incomes filled with job-type median", scored.filter(r=>r._filled).length]);
+  rows.push(["New-to-credit applicants (no score)", cnt("human")]);
+  if (cols.includes("decision")){
+    const ad = scored.filter(r => r._lane==="decline"); const w = ad.filter(r => r.decision==="Approved").length;
+    rows.push(["Auto-declines the bank actually approved", ad.length ? `${w} of ${ad.length} (${pct(w/ad.length)})` : "–"]);
+  }
+  if (cols.includes("gender")){
+    const g = k => { const s = scored.filter(r => r.gender===k); return s.length ? pct(s.filter(r=>r._lane==="decline").length/s.length) : "–"; };
+    rows.push(["Auto-decline rate · female", g("Female")]); rows.push(["Auto-decline rate · male", g("Male")]);
+  }
+  F("checkBody").innerHTML = rows.map(([a,b]) => `<tr><td>${a}</td><td class="n">${b}</td></tr>`).join("");
+  const show = [...scored].sort((a,b) => b._p - a._p).slice(0,60);
+  F("rowBody").innerHTML = show.map(r => `<tr><td class="num">${r._id}</td><td>${r.employment_type}</td><td class="n">${Math.round(r._inc).toLocaleString("en-IN")}</td><td class="n">${r.credit_score ?? "–"}</td><td class="n">${pct(r._foir,0)}</td><td class="n">${r.delinquencies_24m}</td><td class="n">${pct(r._p,0)}</td><td><span class="tag ${r._lane}">${LANE[r._lane]}</span></td><td>${r.decision ?? "–"}</td></tr>`).join("");
+  F("rowNote").textContent = `Showing the ${show.length} applications with the highest decline confidence. The download includes all ${n}.`;
+}
+function scoredCsv(){
+  return Papa.unparse(scored.map(r => { const o = {}; for (const k in r) if (!k.startsWith("_")) o[k] = r[k];
+    o.decline_confidence = +r._p.toFixed(4); o.foir = +r._foir.toFixed(4); o.lane = LANE[r._lane]; return o; }));
+}
+// Inside the Claude artifact viewer, saves go through its downloads capability; on Netlify, a normal browser download.
+let viewerDownloads = null;
+if (window.claude?.use) window.claude.use("downloads").then(d => { viewerDownloads = d; }).catch(() => {});
+F("dlCsv").addEventListener("click", async e => {
+  const b = e.currentTarget, csv = scoredCsv();
+  if (viewerDownloads){
+    try { await viewerDownloads.save({filename:"triage_scored.csv", data:csv}); b.textContent = "Saved"; }
+    catch(err){ b.textContent = err?.code === "declined" ? "Download cancelled" : "Download unavailable here. Use Copy CSV"; }
+    setTimeout(() => b.textContent = "Download scored CSV", 2400); return;
+  }
+  const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([csv], {type:"text/csv"}));
+  a.download = "triage_scored.csv"; document.body.appendChild(a); a.click(); a.remove();
+});
+F("cpCsv").addEventListener("click", async e => {
+  const b = e.currentTarget; try { await navigator.clipboard.writeText(scoredCsv()); b.textContent = "Copied"; } catch(err){ b.textContent = "Copy blocked here. Use Download"; }
+  setTimeout(() => b.textContent = "Copy CSV", 2200);
+});
+F("file").addEventListener("change", e => { const f = e.target.files[0]; if (!f) return; f.text().then(t => runBatch(t, f.name)); });
+F("loadSample").addEventListener("click", () => runBatch(SAMPLE_CSV, "Sample batch"));
+const drop = F("drop");
+["dragenter","dragover"].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add("over"); }));
+["dragleave","drop"].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove("over"); }));
+drop.addEventListener("drop", e => { const f = e.dataTransfer.files[0]; if (f) f.text().then(t => runBatch(t, f.name)); });
+
+// ---------- model view ----------
+function renderModel(){
+  const m = MODEL.metrics;
+  F("facts").innerHTML = [["Accuracy (0.5)", pct(m.accuracy)],["ROC-AUC", m.roc_auc.toFixed(3)],["Precision · declines", pct(m.precision_declined)],["Recall · declines", pct(m.recall_declined)]]
+    .map(([a,b]) => `<div class="kpi"><span>${a}</span><b>${b}</b></div>`).join("");
+  const all = [...MODEL.numeric.map(f => ({label:NUM_LABEL[f.name], c:f.coef})),
+    ...MODEL.categorical.flatMap(f => Object.entries(f.levels).map(([k,c]) => ({label:(f.name==="employment_type"?"Job: ":"Purpose: ")+k, c})))]
+    .sort((a,b) => Math.abs(b.c)-Math.abs(a.c)).slice(0,10);
+  F("coefList").innerHTML = all.map(c => { const pos = c.c>0, w = Math.abs(c.c)/1.4*50;
+    return `<div class="drv"><div class="lbl"><b>${c.label}</b><span>${c.c>0?"+":""}${c.c.toFixed(2)}</span></div><div class="dbar"><i style="${pos?"left:50%":"right:50%"};width:${w}%;background:var(${pos?"--series-2":"--accent"})"></i></div></div>`; }).join("");
+  const c = m.confusion;
+  F("cmTable").innerHTML = `<thead><tr><th></th><th class="n">Model: approve lane</th><th class="n">Model: decline</th></tr></thead><tbody>
+    <tr><td>Bank approved</td><td class="n">${c.tn}</td><td class="n" style="color:var(--decline);font-weight:600">${c.fp}</td></tr>
+    <tr><td>Bank declined</td><td class="n">${c.fn}</td><td class="n">${c.tp}</td></tr></tbody>`;
+  F("verChip").textContent = `logreg · AUC ${m.roc_auc.toFixed(3)}`; F("footVer").textContent = MODEL.version;
+}
+
+// ---------- boot ----------
+renderModel(); renderScore(); runBatch(SAMPLE_CSV, "Sample batch");
+let start = "score"; try { start = localStorage.getItem("triage-view") || "score"; } catch(e){}
+const h = location.hash.replace("#",""); if (views.includes(h)) start = h;
+show(views.includes(start) ? start : "score");
+</script>

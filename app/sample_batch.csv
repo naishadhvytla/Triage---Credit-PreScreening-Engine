@@ -1,0 +1,241 @@
+application_id,application_date,age,gender,city,city_tier,employment_type,years_in_current_job,monthly_income,existing_emi,credit_score,credit_history_months,num_active_loans,delinquencies_24m,loan_purpose,loan_amount,tenure_months,proposed_emi,decision
+APP100022,2026-04-01,27,Male,Ahmedabad,1,Gig / Contract,0.4,43500.0,5000.0,627.0,42,1,2,Consumer Durables,250000.0,36,8500.0,Declined
+APP100092,2026-04-02,24,Male,Chennai,1,Business Owner,1.4,103500.0,0.0,613.0,6,0,2,Consumer Durables,565000.0,36,19300.0,Declined
+APP100095,2026-04-02,30,Male,Raipur,3,Salaried,0.4,77500.0,14000.0,713.0,116,2,0,Medical,655000.0,48,17900.0,Declined
+APP100176,2026-04-03,30,Male,Kolkata,1,Salaried,3.0,111000.0,0.0,,0,0,0,Medical,570000.0,24,27400.0,Approved
+APP100192,2026-04-04,25,Male,Nashik,3,Salaried,3.8,26000.0,5000.0,737.0,7,3,1,Debt Consolidation,310000.0,36,10600.0,Declined
+APP100248,2026-04-04,24,Male,Mumbai,1,Salaried,0.7,108500.0,0.0,655.0,6,0,1,Debt Consolidation,875000.0,24,42000.0,Declined
+APP100308,2026-04-05,28,Male,Bengaluru,1,Business Owner,2.6,40500.0,2000.0,706.0,17,1,0,Education,160000.0,36,5500.0,Approved
+APP100414,2026-04-07,21,Male,Coimbatore,2,Gig / Contract,0.6,46000.0,7000.0,654.0,57,2,1,Education,405000.0,60,9400.0,Declined
+APP100554,2026-04-09,28,Male,Pune,1,Salaried,3.7,72500.0,7500.0,607.0,57,1,2,Debt Consolidation,440000.0,24,21100.0,Declined
+APP100578,2026-04-10,35,Male,Bhubaneswar,2,Business Owner,7.8,,8000.0,689.0,207,1,0,Home Renovation,235000.0,36,8000.0,Approved
+APP100589,2026-04-10,24,Female,Nagpur,2,Gig / Contract,2.7,12000.0,500.0,675.0,14,1,2,Consumer Durables,50000.0,24,2400.0,Declined
+APP100602,2026-04-10,27,Male,Nagpur,2,Salaried,1.0,32500.0,0.0,,0,0,0,Home Renovation,280000.0,36,9600.0,Declined
+APP100695,2026-04-11,28,Male,Delhi,1,Gig / Contract,0.4,89000.0,34500.0,651.0,102,4,2,Medical,745000.0,36,25500.0,Declined
+APP100753,2026-04-12,44,Male,Bengaluru,1,Business Owner,3.0,,9000.0,683.0,269,1,2,Home Renovation,450000.0,48,12300.0,Approved
+APP100784,2026-04-13,29,Female,Hyderabad,1,Salaried,6.6,36000.0,2500.0,747.0,108,1,0,Home Renovation,220000.0,24,10600.0,Approved
+APP100864,2026-04-14,25,Male,Dehradun,3,Gig / Contract,3.0,15000.0,3000.0,670.0,87,2,1,Debt Consolidation,50000.0,60,1200.0,Declined
+APP100886,2026-04-14,35,Male,Delhi,1,Salaried,3.8,56000.0,0.0,667.0,64,0,1,Travel,330000.0,48,9000.0,Approved
+APP100922,2026-04-15,34,Male,Kolkata,1,Self-Employed Professional,5.1,42000.0,0.0,821.0,129,0,0,Medical,310000.0,60,7200.0,Approved
+APP100940,2026-04-15,30,Male,Kochi,2,Self-Employed Professional,1.3,39000.0,4500.0,659.0,82,1,2,Wedding,120000.0,24,5800.0,Approved
+APP100998,2026-04-16,21,Female,Raipur,3,Salaried,2.5,24000.0,0.0,741.0,6,0,0,Consumer Durables,55000.0,12,4900.0,Approved
+APP101011,2026-04-16,43,Male,Dehradun,3,Salaried,2.1,60000.0,15000.0,662.0,216,3,0,Medical,490000.0,36,16700.0,Declined
+APP101075,2026-04-17,30,Male,Jaipur,2,Salaried,3.2,56500.0,5000.0,729.0,50,1,0,Debt Consolidation,460000.0,12,41300.0,Declined
+APP101090,2026-04-17,21,Female,Jaipur,2,Salaried,4.4,51500.0,3000.0,696.0,6,1,1,Medical,240000.0,12,21500.0,Declined
+APP101138,2026-04-17,43,Female,Visakhapatnam,2,Business Owner,6.4,65000.0,10000.0,657.0,176,2,2,Travel,435000.0,24,20900.0,Declined
+APP101141,2026-04-18,31,Female,Lucknow,2,Salaried,3.5,37500.0,3000.0,687.0,76,1,0,Travel,150000.0,36,5100.0,Approved
+APP101292,2026-04-20,36,Male,Bengaluru,1,Business Owner,3.6,177000.0,24000.0,707.0,121,2,0,Home Renovation,1490000.0,60,34700.0,Approved
+APP101390,2026-04-21,27,Male,Chennai,1,Salaried,0.5,41500.0,5000.0,757.0,67,1,1,Debt Consolidation,505000.0,48,13800.0,Declined
+APP101429,2026-04-22,34,Male,Chandigarh,2,Self-Employed Professional,4.6,72000.0,11500.0,759.0,102,2,0,Home Renovation,695000.0,48,19000.0,Approved
+APP101430,2026-04-22,34,Male,Jaipur,2,Self-Employed Professional,3.2,78000.0,0.0,726.0,154,0,2,Home Renovation,265000.0,48,7200.0,Declined
+APP101478,2026-04-23,41,Male,Lucknow,2,Salaried,0.2,47500.0,5500.0,646.0,186,1,4,Home Renovation,105000.0,36,3600.0,Declined
+APP101530,2026-04-24,49,Male,Chennai,1,Salaried,1.2,45500.0,7000.0,690.0,250,3,2,Travel,130000.0,60,3000.0,Approved
+APP101734,2026-04-27,31,Male,Coimbatore,2,Salaried,3.0,57500.0,0.0,785.0,87,0,0,Home Renovation,535000.0,48,14600.0,Approved
+APP101858,2026-04-28,24,Male,Jaipur,2,Salaried,4.3,61500.0,7000.0,666.0,6,2,0,Home Renovation,585000.0,48,16000.0,Approved
+APP101904,2026-04-29,29,Female,Chennai,1,Salaried,2.1,41500.0,0.0,741.0,47,0,0,Education,395000.0,36,13500.0,Declined
+APP101967,2026-04-30,45,Male,Guntur,3,Salaried,5.8,52000.0,6500.0,803.0,264,1,0,Debt Consolidation,300000.0,24,14400.0,Approved
+APP102021,2026-05-01,31,Male,Mumbai,1,Salaried,4.1,64500.0,0.0,738.0,96,0,1,Consumer Durables,230000.0,48,6300.0,Approved
+APP102106,2026-05-03,39,Male,Mysuru,3,Salaried,1.9,31500.0,4000.0,795.0,151,2,0,Home Renovation,265000.0,60,6200.0,Approved
+APP102116,2026-05-03,25,Male,Raipur,3,Business Owner,2.1,,5500.0,791.0,25,2,0,Home Renovation,200000.0,48,5500.0,Approved
+APP102268,2026-05-05,31,Female,Coimbatore,2,Salaried,7.1,63500.0,0.0,672.0,104,0,4,Wedding,355000.0,36,12100.0,Declined
+APP102278,2026-05-05,33,Female,Nagpur,2,Salaried,3.1,28000.0,0.0,660.0,99,0,4,Medical,115000.0,48,3100.0,Declined
+APP102339,2026-05-06,30,Female,Kolkata,1,Gig / Contract,4.8,35000.0,0.0,705.0,87,0,2,Medical,255000.0,24,12200.0,Approved
+APP102347,2026-05-07,33,Male,Pune,1,Business Owner,2.2,70500.0,9500.0,731.0,121,2,0,Debt Consolidation,825000.0,12,74100.0,Declined
+APP102351,2026-05-07,25,Female,Delhi,1,Self-Employed Professional,5.0,74500.0,0.0,647.0,64,0,5,Medical,290000.0,24,13900.0,Declined
+APP102394,2026-05-07,29,Female,Chennai,1,Gig / Contract,2.2,21000.0,2000.0,784.0,83,1,0,Wedding,155000.0,24,7400.0,Declined
+APP102450,2026-05-08,29,Male,Vijayawada,2,Salaried,2.1,40000.0,0.0,746.0,51,0,0,Medical,90000.0,36,3100.0,Approved
+APP102475,2026-05-09,34,Male,Delhi,1,Salaried,0.6,53000.0,3000.0,728.0,119,1,1,Travel,490000.0,12,44000.0,Declined
+APP102544,2026-05-10,29,Male,Kochi,2,Salaried,3.7,83500.0,8500.0,848.0,79,1,0,Consumer Durables,340000.0,24,16300.0,Approved
+APP102587,2026-05-10,54,Male,Madurai,3,Salaried,1.6,54500.0,9500.0,753.0,319,3,0,Medical,345000.0,48,9400.0,Approved
+APP102645,2026-05-11,21,Male,Lucknow,2,Salaried,1.6,40000.0,0.0,,0,0,0,Wedding,100000.0,24,4800.0,Declined
+APP102726,2026-05-12,32,Male,Bengaluru,1,Self-Employed Professional,4.7,200500.0,10500.0,722.0,66,1,1,Wedding,1075000.0,60,25000.0,Approved
+APP102785,2026-05-13,34,Male,Delhi,1,Salaried,1.6,20500.0,0.0,802.0,138,0,0,Medical,75000.0,24,3600.0,Approved
+APP102821,2026-05-14,39,Male,Visakhapatnam,2,Self-Employed Professional,5.4,90000.0,0.0,676.0,192,0,1,Wedding,730000.0,60,17000.0,Approved
+APP102837,2026-05-14,33,Female,Hyderabad,1,Gig / Contract,2.8,41500.0,5000.0,780.0,129,1,0,Education,215000.0,24,10300.0,Approved
+APP102907,2026-05-15,36,Female,Madurai,3,Salaried,2.2,34500.0,0.0,826.0,139,0,0,Debt Consolidation,315000.0,24,15100.0,Approved
+APP102982,2026-05-16,38,Male,Mysuru,3,Salaried,5.8,64500.0,7000.0,702.0,160,1,0,Medical,410000.0,36,14000.0,Approved
+APP103046,2026-05-17,30,Female,Mumbai,1,Salaried,3.7,52000.0,9500.0,677.0,84,2,2,Medical,495000.0,36,16900.0,Declined
+APP103060,2026-05-17,29,Male,Dehradun,3,Business Owner,3.8,,0.0,701.0,84,0,2,Medical,365000.0,36,12500.0,Approved
+APP103112,2026-05-18,33,Male,Dehradun,3,Salaried,4.2,21000.0,2000.0,890.0,115,1,0,Consumer Durables,95000.0,48,2600.0,Approved
+APP103159,2026-05-19,39,Male,Lucknow,2,Business Owner,9.7,27000.0,1500.0,710.0,180,1,1,Consumer Durables,185000.0,12,16600.0,Declined
+APP103211,2026-05-20,39,Male,Kolkata,1,Business Owner,9.2,54500.0,9000.0,755.0,188,2,0,Medical,405000.0,24,19400.0,Declined
+APP103273,2026-05-21,38,Female,Pune,1,Salaried,6.8,74000.0,9000.0,750.0,176,1,0,Consumer Durables,450000.0,48,12300.0,Approved
+APP103322,2026-05-22,49,Male,Mumbai,1,Business Owner,23.5,122000.0,14000.0,795.0,281,1,0,Home Renovation,1035000.0,12,92900.0,Declined
+APP103351,2026-05-22,26,Male,Kolkata,1,Salaried,2.7,78000.0,0.0,790.0,78,0,0,Wedding,665000.0,24,31900.0,Approved
+APP103352,2026-05-22,38,Male,Jaipur,2,Salaried,4.1,35500.0,0.0,675.0,154,0,0,Medical,250000.0,60,5800.0,Approved
+APP103362,2026-05-22,41,Male,Jaipur,2,Salaried,3.5,147000.0,11500.0,655.0,200,1,2,Travel,995000.0,48,27200.0,Declined
+APP103434,2026-05-24,43,Male,Delhi,1,Salaried,6.0,123500.0,0.0,,0,0,0,Wedding,770000.0,60,17900.0,Approved
+APP103475,2026-05-24,25,Female,Indore,2,Gig / Contract,0.8,23000.0,3000.0,747.0,27,1,0,Medical,225000.0,36,7700.0,Declined
+APP103489,2026-05-24,44,Male,Chandigarh,2,Gig / Contract,2.0,36000.0,2000.0,702.0,220,1,1,Home Renovation,230000.0,36,7900.0,Approved
+APP103499,2026-05-25,35,Male,Vijayawada,2,Business Owner,4.7,71500.0,0.0,846.0,132,0,0,Wedding,695000.0,36,23800.0,Declined
+APP103546,2026-05-26,41,Male,Mumbai,1,Salaried,5.5,112500.0,12500.0,759.0,230,2,0,Home Renovation,610000.0,60,14200.0,Approved
+APP103571,2026-05-26,43,Male,Lucknow,2,Gig / Contract,4.6,39000.0,2000.0,728.0,244,1,1,Medical,120000.0,48,3300.0,Approved
+APP103577,2026-05-26,49,Female,Coimbatore,2,Business Owner,5.7,,11000.0,553.0,278,1,10,Travel,510000.0,24,24500.0,Declined
+APP103640,2026-05-27,38,Male,Pune,1,Salaried,8.4,63000.0,0.0,709.0,171,0,1,Home Renovation,330000.0,60,7700.0,Approved
+APP103675,2026-05-27,39,Male,Coimbatore,2,Salaried,3.5,70500.0,0.0,756.0,184,0,0,Wedding,250000.0,24,12000.0,Approved
+APP103686,2026-05-28,42,Female,Hyderabad,1,Gig / Contract,0.3,38500.0,5000.0,716.0,210,2,1,Home Renovation,335000.0,48,9200.0,Declined
+APP103751,2026-05-28,40,Male,Coimbatore,2,Salaried,2.6,63000.0,15500.0,689.0,218,2,2,Consumer Durables,295000.0,36,10100.0,Declined
+APP103831,2026-05-30,26,Male,Delhi,1,Salaried,2.9,56000.0,0.0,673.0,46,0,2,Home Renovation,420000.0,36,14400.0,Declined
+APP103845,2026-05-30,40,Male,Bengaluru,1,Salaried,2.3,87500.0,0.0,,0,0,0,Consumer Durables,295000.0,36,10100.0,Approved
+APP103878,2026-05-30,36,Male,Guntur,3,Self-Employed Professional,3.4,49500.0,6500.0,654.0,131,2,1,Wedding,410000.0,24,19700.0,Declined
+APP103886,2026-05-31,28,Male,Mysuru,3,Business Owner,2.0,22000.0,8000.0,698.0,108,3,1,Education,130000.0,36,4400.0,Declined
+APP103996,2026-06-01,42,Female,Lucknow,2,Self-Employed Professional,4.1,40000.0,9000.0,668.0,220,3,1,Medical,100000.0,36,3400.0,Declined
+APP104007,2026-06-02,39,Female,Pune,1,Gig / Contract,0.7,38500.0,2000.0,693.0,170,1,1,Medical,135000.0,48,3700.0,Declined
+APP104037,2026-06-02,35,Male,Delhi,1,Salaried,3.9,30000.0,0.0,746.0,91,0,0,Consumer Durables,260000.0,36,8900.0,Approved
+APP104039,2026-06-02,32,Male,Nagpur,2,Salaried,2.0,37000.0,8000.0,771.0,89,3,0,Consumer Durables,150000.0,48,4100.0,Declined
+APP104071,2026-06-03,38,Female,Nagpur,2,Salaried,14.5,,0.0,772.0,180,0,0,Debt Consolidation,245000.0,48,6700.0,Approved
+APP104087,2026-06-03,32,Male,Bengaluru,1,Business Owner,5.5,143500.0,0.0,781.0,78,0,0,Wedding,1350000.0,60,31400.0,Approved
+APP104096,2026-06-03,35,Male,Hyderabad,1,Gig / Contract,2.8,48000.0,8000.0,640.0,144,2,0,Debt Consolidation,160000.0,12,14400.0,Declined
+APP104107,2026-06-03,36,Female,Guntur,3,Salaried,8.2,43500.0,0.0,664.0,111,0,1,Debt Consolidation,310000.0,48,8500.0,Approved
+APP104143,2026-06-04,44,Female,Chandigarh,2,Salaried,5.7,53000.0,4000.0,599.0,236,1,1,Home Renovation,160000.0,36,5500.0,Declined
+APP104161,2026-06-04,32,Male,Kolkata,1,Salaried,0.7,41000.0,9500.0,663.0,119,2,4,Wedding,280000.0,48,7700.0,Declined
+APP104176,2026-06-04,35,Male,Hubballi,3,Salaried,8.6,40000.0,0.0,794.0,136,0,0,Home Renovation,290000.0,36,9900.0,Approved
+APP104197,2026-06-04,36,Male,Mumbai,1,Salaried,0.4,104500.0,0.0,647.0,156,0,2,Medical,750000.0,12,67300.0,Declined
+APP104345,2026-06-07,43,Male,Delhi,1,Salaried,4.8,71500.0,9500.0,653.0,223,2,2,Consumer Durables,545000.0,12,48900.0,Declined
+APP104445,2026-06-08,21,Male,Nagpur,2,Gig / Contract,1.4,24500.0,6000.0,711.0,9,3,2,Education,105000.0,24,5000.0,Declined
+APP104476,2026-06-09,30,Male,Indore,2,Salaried,3.2,34500.0,3500.0,657.0,118,1,2,Debt Consolidation,240000.0,36,8200.0,Declined
+APP104513,2026-06-09,30,Male,Lucknow,2,Salaried,6.3,63500.0,0.0,,0,0,0,Travel,575000.0,24,27600.0,Approved
+APP104666,2026-06-12,40,Male,Mumbai,1,Gig / Contract,2.0,62000.0,13000.0,670.0,156,2,2,Education,475000.0,24,22800.0,Declined
+APP104746,2026-06-13,43,Male,Vijayawada,2,Business Owner,2.5,,12500.0,768.0,243,1,0,Debt Consolidation,1155000.0,36,39500.0,Approved
+APP104837,2026-06-14,25,Female,Chennai,1,Business Owner,0.7,55000.0,31500.0,654.0,33,5,3,Education,460000.0,60,10700.0,Declined
+APP104857,2026-06-14,34,Male,Hyderabad,1,Business Owner,9.6,46500.0,4000.0,688.0,137,1,2,Debt Consolidation,120000.0,36,4100.0,Declined
+APP104887,2026-06-15,27,Male,Lucknow,2,Salaried,2.9,88500.0,0.0,794.0,52,0,0,Home Renovation,665000.0,36,22700.0,Approved
+APP104930,2026-06-16,49,Male,Bhubaneswar,2,Salaried,3.8,104500.0,6000.0,649.0,341,1,2,Debt Consolidation,765000.0,36,26100.0,Declined
+APP105063,2026-06-18,31,Male,Nashik,3,Salaried,7.9,37500.0,0.0,761.0,152,0,0,Home Renovation,105000.0,60,2400.0,Approved
+APP105069,2026-06-18,29,Female,Kochi,2,Salaried,3.2,16000.0,1500.0,762.0,86,1,0,Wedding,50000.0,36,1700.0,Approved
+APP105085,2026-06-18,38,Female,Vijayawada,2,Gig / Contract,2.6,12000.0,0.0,737.0,201,0,0,Home Renovation,55000.0,60,1300.0,Approved
+APP105095,2026-06-18,46,Female,Delhi,1,Salaried,8.3,106500.0,27000.0,694.0,268,2,1,Home Renovation,780000.0,36,26700.0,Declined
+APP105099,2026-06-18,37,Male,Lucknow,2,Salaried,4.5,64500.0,4000.0,815.0,133,1,0,Home Renovation,375000.0,48,10200.0,Approved
+APP105201,2026-06-20,29,Male,Chandigarh,2,Self-Employed Professional,8.8,23500.0,0.0,890.0,36,0,0,Debt Consolidation,225000.0,12,20200.0,Declined
+APP105281,2026-06-21,28,Male,Hyderabad,1,Salaried,1.9,97000.0,7500.0,623.0,36,1,1,Travel,495000.0,48,13500.0,Declined
+APP105322,2026-06-22,31,Male,Indore,2,Salaried,1.0,35500.0,0.0,734.0,125,0,0,Home Renovation,290000.0,48,7900.0,Approved
+APP105364,2026-06-22,32,Male,Vijayawada,2,Salaried,5.0,28000.0,2500.0,750.0,125,1,0,Home Renovation,90000.0,36,3100.0,Declined
+APP105451,2026-06-24,21,Male,Ahmedabad,1,Self-Employed Professional,1.8,,0.0,703.0,6,0,0,Debt Consolidation,240000.0,24,11500.0,Declined
+APP105480,2026-06-24,38,Male,Indore,2,Salaried,7.0,13500.0,2000.0,747.0,128,2,0,Debt Consolidation,105000.0,60,2400.0,Approved
+APP105503,2026-06-24,36,Male,Lucknow,2,Self-Employed Professional,2.5,69000.0,5500.0,677.0,159,1,2,Wedding,640000.0,12,57500.0,Declined
+APP105515,2026-06-25,23,Female,Kochi,2,Business Owner,1.4,20000.0,3500.0,698.0,17,3,0,Debt Consolidation,70000.0,48,1900.0,Approved
+APP105604,2026-06-26,28,Male,Mumbai,1,Business Owner,1.8,53000.0,13000.0,687.0,112,3,0,Wedding,420000.0,36,14400.0,Declined
+APP105647,2026-06-27,47,Male,Mysuru,3,Self-Employed Professional,11.6,30500.0,6500.0,825.0,228,2,0,Medical,295000.0,36,10100.0,Approved
+APP105706,2026-06-27,25,Male,Vijayawada,2,Salaried,4.0,31500.0,0.0,,0,0,0,Debt Consolidation,260000.0,24,12500.0,Approved
+APP105747,2026-06-28,45,Male,Delhi,1,Business Owner,12.5,182500.0,0.0,,0,0,0,Travel,1755000.0,48,48000.0,Declined
+APP105769,2026-06-28,21,Female,Pune,1,Self-Employed Professional,0.7,72000.0,7000.0,718.0,28,1,2,Medical,335000.0,36,11400.0,Declined
+APP105831,2026-06-29,27,Male,Visakhapatnam,2,Salaried,1.8,39500.0,6500.0,784.0,80,2,0,Travel,260000.0,36,8900.0,Approved
+APP105899,2026-06-30,27,Male,Chennai,1,Salaried,4.1,76500.0,4500.0,776.0,87,1,0,Travel,305000.0,60,7100.0,Approved
+APP105927,2026-06-30,29,Male,Delhi,1,Salaried,2.8,117500.0,20500.0,790.0,28,2,0,Debt Consolidation,940000.0,12,84400.0,Approved
+APP105949,2026-06-30,39,Male,Delhi,1,Salaried,6.7,99000.0,10000.0,682.0,164,1,2,Home Renovation,445000.0,48,12200.0,Approved
+APP105989,2026-07-01,27,Male,Lucknow,2,Salaried,0.8,17000.0,0.0,777.0,79,0,0,Home Renovation,70000.0,36,2400.0,Approved
+APP106058,2026-07-02,35,Female,Visakhapatnam,2,Salaried,1.9,42500.0,2500.0,886.0,122,1,0,Home Renovation,200000.0,60,4700.0,Approved
+APP106070,2026-07-02,38,Female,Mumbai,1,Salaried,0.4,79500.0,11500.0,771.0,180,2,1,Medical,485000.0,36,16600.0,Approved
+APP106156,2026-07-03,38,Male,Guntur,3,Salaried,2.5,28000.0,0.0,732.0,200,0,2,Home Renovation,265000.0,36,9100.0,Declined
+APP106177,2026-07-04,36,Male,Visakhapatnam,2,Salaried,0.8,50500.0,5000.0,778.0,162,1,0,Wedding,400000.0,60,9300.0,Approved
+APP106196,2026-07-04,37,Male,Ahmedabad,1,Self-Employed Professional,5.2,107000.0,0.0,646.0,139,0,2,Home Renovation,760000.0,48,20800.0,Declined
+APP106345,2026-07-06,38,Female,Guntur,3,Business Owner,0.9,74500.0,9000.0,734.0,175,1,1,Medical,480000.0,24,23000.0,Declined
+APP106350,2026-07-06,37,Male,Coimbatore,2,Business Owner,6.4,93500.0,22000.0,730.0,175,2,0,Wedding,275000.0,24,13200.0,Declined
+APP106357,2026-07-07,42,Female,Visakhapatnam,2,Salaried,0.8,54500.0,0.0,,0,0,0,Wedding,310000.0,48,8500.0,Approved
+APP106373,2026-07-07,36,Male,Chennai,1,Salaried,2.4,65500.0,0.0,731.0,176,0,0,Home Renovation,480000.0,36,16400.0,Declined
+APP106377,2026-07-07,22,Female,Coimbatore,2,Salaried,1.6,36500.0,0.0,774.0,31,0,0,Consumer Durables,290000.0,12,26000.0,Declined
+APP106441,2026-07-08,32,Male,Jaipur,2,Salaried,0.3,36500.0,8500.0,783.0,52,2,1,Consumer Durables,340000.0,12,30500.0,Declined
+APP106500,2026-07-09,33,Female,Delhi,1,Salaried,3.4,29500.0,0.0,738.0,119,0,0,Education,100000.0,36,3400.0,Approved
+APP106544,2026-07-10,34,Male,Bhubaneswar,2,Salaried,4.8,48000.0,6000.0,731.0,146,2,0,Medical,240000.0,36,8200.0,Approved
+APP106607,2026-07-11,47,Male,Nashik,3,Gig / Contract,1.9,50500.0,5000.0,779.0,270,1,1,Debt Consolidation,350000.0,60,8100.0,Approved
+APP106699,2026-07-12,26,Male,Indore,2,Salaried,2.7,34500.0,0.0,609.0,61,0,3,Home Renovation,300000.0,36,10300.0,Declined
+APP106706,2026-07-12,33,Male,Vijayawada,2,Self-Employed Professional,0.4,37000.0,4500.0,777.0,137,1,0,Wedding,330000.0,60,7700.0,Approved
+APP106714,2026-07-12,36,Female,Hubballi,3,Salaried,10.0,30000.0,4000.0,718.0,139,2,0,Consumer Durables,225000.0,60,5200.0,Approved
+APP106880,2026-07-15,24,Female,Pune,1,Self-Employed Professional,7.2,40000.0,0.0,716.0,36,0,1,Medical,250000.0,24,12000.0,Approved
+APP106962,2026-07-16,31,Male,Kochi,2,Salaried,6.5,60000.0,6500.0,684.0,82,1,5,Debt Consolidation,575000.0,36,19700.0,Declined
+APP107050,2026-07-17,35,Male,Lucknow,2,Gig / Contract,6.9,12000.0,1500.0,574.0,144,1,5,Medical,55000.0,24,2600.0,Declined
+APP107066,2026-07-17,28,Male,Dehradun,3,Salaried,3.2,19500.0,2500.0,665.0,113,1,1,Education,95000.0,36,3200.0,Declined
+APP107156,2026-07-19,27,Female,Nagpur,2,Salaried,2.7,30500.0,4000.0,730.0,21,2,0,Home Renovation,135000.0,36,4600.0,Approved
+APP107201,2026-07-19,30,Female,Chennai,1,Salaried,12.3,52500.0,16000.0,682.0,70,3,3,Education,135000.0,24,6500.0,Declined
+APP107202,2026-07-19,46,Male,Hubballi,3,Salaried,5.2,54500.0,3500.0,856.0,240,1,0,Debt Consolidation,650000.0,36,22200.0,Approved
+APP107227,2026-07-20,38,Male,Mysuru,3,Salaried,13.1,57500.0,12500.0,604.0,182,4,5,Debt Consolidation,305000.0,48,8300.0,Declined
+APP107235,2026-07-20,25,Male,Hyderabad,1,Salaried,1.2,39500.0,5500.0,571.0,72,2,3,Travel,295000.0,24,14200.0,Declined
+APP107247,2026-07-20,28,Female,Nagpur,2,Salaried,1.7,32500.0,4500.0,701.0,101,2,0,Wedding,140000.0,24,6700.0,Declined
+APP107325,2026-07-22,26,Female,Coimbatore,2,Business Owner,4.3,66500.0,13500.0,819.0,28,2,0,Education,475000.0,12,42600.0,Approved
+APP107367,2026-07-22,37,Female,Vijayawada,2,Salaried,1.9,14500.0,0.0,697.0,128,0,1,Wedding,80000.0,48,2200.0,Declined
+APP107384,2026-07-22,26,Male,Chennai,1,Self-Employed Professional,2.0,81000.0,9500.0,729.0,52,2,1,Debt Consolidation,945000.0,24,45400.0,Declined
+APP107393,2026-07-23,49,Female,Pune,1,Salaried,2.6,55000.0,4000.0,741.0,282,1,0,Debt Consolidation,655000.0,24,31400.0,Declined
+APP107452,2026-07-23,31,Female,Chennai,1,Salaried,4.8,72000.0,0.0,640.0,109,0,1,Consumer Durables,605000.0,36,20700.0,Declined
+APP107483,2026-07-24,42,Male,Delhi,1,Salaried,4.9,86500.0,0.0,,0,0,0,Home Renovation,455000.0,12,40900.0,Approved
+APP107524,2026-07-25,21,Male,Ahmedabad,1,Salaried,0.6,46500.0,0.0,778.0,6,0,0,Medical,330000.0,12,29600.0,Declined
+APP107809,2026-07-29,23,Female,Kolkata,1,Salaried,3.2,26500.0,3500.0,704.0,58,2,1,Travel,75000.0,60,1700.0,Approved
+APP107825,2026-07-29,32,Male,Visakhapatnam,2,Gig / Contract,2.0,17500.0,1500.0,623.0,124,1,4,Travel,60000.0,24,2900.0,Declined
+APP107827,2026-07-29,33,Female,Ahmedabad,1,Salaried,4.3,35500.0,9000.0,756.0,95,2,0,Education,265000.0,36,9100.0,Approved
+APP107889,2026-07-30,42,Male,Pune,1,Salaried,4.7,92500.0,20500.0,702.0,197,2,2,Education,480000.0,12,43100.0,Declined
+APP107960,2026-07-31,31,Female,Chandigarh,2,Salaried,11.6,33500.0,2500.0,780.0,79,1,0,Debt Consolidation,200000.0,36,6800.0,Approved
+APP108107,2026-08-03,35,Male,Ahmedabad,1,Business Owner,5.0,65500.0,6000.0,793.0,169,1,0,Home Renovation,335000.0,48,9200.0,Approved
+APP108121,2026-08-03,21,Female,Chennai,1,Salaried,0.9,26500.0,0.0,,0,0,0,Debt Consolidation,165000.0,12,14800.0,Approved
+APP108210,2026-08-04,44,Female,Ahmedabad,1,Salaried,6.2,76000.0,21500.0,761.0,255,3,0,Education,365000.0,36,12500.0,Approved
+APP108271,2026-08-05,44,Male,Delhi,1,Business Owner,0.7,208500.0,19000.0,779.0,226,1,0,Debt Consolidation,2320000.0,60,54000.0,Approved
+APP108371,2026-08-06,39,Female,Bhubaneswar,2,Gig / Contract,3.1,34500.0,2500.0,788.0,198,1,0,Debt Consolidation,300000.0,12,26900.0,Declined
+APP108389,2026-08-07,27,Female,Madurai,3,Salaried,3.1,28500.0,1500.0,807.0,56,1,0,Education,240000.0,36,8200.0,Approved
+APP108400,2026-08-07,21,Male,Hyderabad,1,Salaried,4.8,92000.0,18000.0,707.0,32,2,0,Wedding,305000.0,36,10400.0,Approved
+APP108487,2026-08-08,29,Male,Mysuru,3,Salaried,6.0,38000.0,0.0,695.0,51,0,1,Home Renovation,235000.0,36,8000.0,Approved
+APP108535,2026-08-08,36,Male,Pune,1,Salaried,4.8,113000.0,23500.0,742.0,130,2,0,Home Renovation,1125000.0,36,38400.0,Declined
+APP108585,2026-08-09,29,Female,Mumbai,1,Self-Employed Professional,0.2,97000.0,0.0,653.0,111,0,2,Medical,310000.0,36,10600.0,Declined
+APP108685,2026-08-11,39,Male,Hyderabad,1,Business Owner,4.9,63000.0,0.0,697.0,199,0,0,Education,485000.0,60,11300.0,Approved
+APP108811,2026-08-13,36,Female,Delhi,1,Salaried,1.6,37000.0,4000.0,653.0,147,1,4,Wedding,230000.0,12,20700.0,Declined
+APP108873,2026-08-14,26,Female,Nashik,3,Gig / Contract,1.0,12000.0,2500.0,734.0,51,2,0,Medical,95000.0,48,2600.0,Approved
+APP108884,2026-08-14,41,Male,Jaipur,2,Salaried,5.9,31000.0,0.0,734.0,162,0,0,Education,260000.0,24,12500.0,Approved
+APP108982,2026-08-16,29,Female,Mysuru,3,Self-Employed Professional,1.2,51500.0,7000.0,689.0,98,2,3,Debt Consolidation,435000.0,24,20900.0,Declined
+APP109064,2026-08-17,38,Female,Hubballi,3,Gig / Contract,1.0,23000.0,1500.0,685.0,181,1,3,Home Renovation,85000.0,36,2900.0,Approved
+APP109109,2026-08-18,37,Female,Kolkata,1,Gig / Contract,0.6,27500.0,6500.0,726.0,149,2,0,Medical,125000.0,48,3400.0,Declined
+APP109171,2026-08-19,21,Female,Hyderabad,1,Salaried,0.7,35500.0,0.0,,0,0,0,Debt Consolidation,175000.0,48,4800.0,Declined
+APP109179,2026-08-19,29,Male,Chennai,1,Gig / Contract,1.5,39000.0,2500.0,574.0,45,1,6,Debt Consolidation,205000.0,24,9800.0,Declined
+APP109189,2026-08-19,31,Male,Delhi,1,Salaried,3.0,100000.0,8000.0,771.0,144,1,0,Debt Consolidation,455000.0,24,21800.0,Approved
+APP109254,2026-08-20,31,Male,Visakhapatnam,2,Salaried,4.6,41000.0,0.0,692.0,110,0,0,Education,350000.0,36,12000.0,Approved
+APP109320,2026-08-21,32,Female,Madurai,3,Salaried,0.4,74000.0,8000.0,659.0,86,1,2,Consumer Durables,240000.0,48,6600.0,Declined
+APP109341,2026-08-21,34,Male,Bengaluru,1,Business Owner,2.9,,19000.0,770.0,77,2,0,Consumer Durables,900000.0,12,80800.0,Declined
+APP109369,2026-08-22,41,Female,Kolkata,1,Salaried,4.7,58000.0,5000.0,864.0,214,1,0,Education,215000.0,24,10300.0,Approved
+APP109382,2026-08-22,38,Female,Indore,2,Salaried,3.3,55000.0,7500.0,754.0,198,2,0,Education,460000.0,36,15700.0,Approved
+APP109577,2026-08-25,41,Female,Chandigarh,2,Salaried,5.4,87000.0,16000.0,620.0,219,2,1,Consumer Durables,655000.0,36,22400.0,Declined
+APP109603,2026-08-25,25,Male,Hyderabad,1,Salaried,1.6,73000.0,0.0,699.0,56,0,3,Medical,390000.0,24,18700.0,Declined
+APP109683,2026-08-26,38,Male,Bengaluru,1,Salaried,12.2,100000.0,0.0,596.0,212,0,4,Travel,695000.0,36,23800.0,Declined
+APP109766,2026-08-27,28,Male,Kolkata,1,Salaried,2.2,52000.0,5500.0,651.0,65,2,6,Travel,445000.0,60,10400.0,Declined
+APP109818,2026-08-28,36,Male,Dehradun,3,Salaried,3.9,65000.0,16500.0,809.0,183,2,0,Wedding,160000.0,12,14400.0,Approved
+APP109832,2026-08-28,38,Male,Nashik,3,Gig / Contract,7.0,19000.0,1500.0,750.0,201,1,0,Debt Consolidation,200000.0,60,4700.0,Declined
+APP109913,2026-08-29,31,Male,Raipur,3,Salaried,5.0,20000.0,0.0,650.0,98,0,1,Education,80000.0,36,2700.0,Declined
+APP109916,2026-08-29,44,Male,Mysuru,3,Salaried,4.1,45000.0,0.0,781.0,254,0,0,Debt Consolidation,315000.0,48,8600.0,Approved
+APP109963,2026-08-30,21,Male,Jaipur,2,Business Owner,0.2,,2500.0,619.0,6,1,1,Debt Consolidation,75000.0,36,2600.0,Declined
+APP110034,2026-08-31,47,Male,Dehradun,3,Gig / Contract,7.3,36500.0,7500.0,674.0,267,2,3,Consumer Durables,335000.0,24,16100.0,Declined
+APP110051,2026-08-31,35,Male,Pune,1,Gig / Contract,1.4,30000.0,4000.0,795.0,121,1,0,Wedding,75000.0,24,3600.0,Approved
+APP110069,2026-09-01,21,Female,Vijayawada,2,Salaried,3.2,40000.0,5000.0,745.0,52,1,0,Wedding,85000.0,48,2300.0,Approved
+APP110098,2026-09-01,31,Male,Delhi,1,Salaried,5.2,162500.0,0.0,731.0,101,0,0,Wedding,1005000.0,60,23400.0,Declined
+APP110104,2026-09-01,30,Male,Vijayawada,2,Salaried,1.7,53000.0,18500.0,740.0,80,3,1,Home Renovation,470000.0,36,16100.0,Declined
+APP110175,2026-09-02,37,Male,Chennai,1,Salaried,2.3,75000.0,0.0,710.0,164,0,1,Travel,720000.0,12,64600.0,Declined
+APP110232,2026-09-03,42,Male,Pune,1,Salaried,7.3,35000.0,0.0,636.0,207,0,1,Debt Consolidation,325000.0,24,15600.0,Declined
+APP110302,2026-09-04,48,Male,Mysuru,3,Salaried,4.6,66500.0,7000.0,805.0,252,1,0,Home Renovation,565000.0,36,19300.0,Approved
+APP110516,2026-09-08,28,Male,Bengaluru,1,Business Owner,2.7,71500.0,16000.0,670.0,88,2,1,Travel,510000.0,12,45800.0,Declined
+APP110582,2026-09-09,24,Male,Chennai,1,Gig / Contract,0.4,21000.0,0.0,,0,0,0,Home Renovation,115000.0,60,2700.0,Approved
+APP110583,2026-09-09,39,Male,Mysuru,3,Gig / Contract,4.6,26000.0,2500.0,627.0,237,1,1,Consumer Durables,155000.0,60,3600.0,Declined
+APP110590,2026-09-09,43,Female,Ahmedabad,1,Salaried,1.6,58000.0,10500.0,732.0,206,2,0,Travel,510000.0,60,11900.0,Approved
+APP110620,2026-09-09,43,Male,Vijayawada,2,Business Owner,4.8,92000.0,32000.0,743.0,216,3,0,Consumer Durables,700000.0,48,19100.0,Declined
+APP110725,2026-09-11,42,Female,Mumbai,1,Self-Employed Professional,4.4,70000.0,30500.0,796.0,188,5,0,Travel,515000.0,36,17600.0,Declined
+APP110747,2026-09-11,38,Male,Ahmedabad,1,Business Owner,8.0,,27000.0,769.0,130,3,0,Wedding,855000.0,12,76800.0,Declined
+APP110793,2026-09-12,37,Female,Kochi,2,Salaried,14.2,33500.0,6500.0,768.0,153,2,0,Home Renovation,130000.0,60,3000.0,Approved
+APP110825,2026-09-12,44,Female,Jaipur,2,Salaried,5.7,39500.0,7500.0,704.0,241,2,2,Consumer Durables,310000.0,48,8500.0,Declined
+APP110896,2026-09-14,21,Female,Hyderabad,1,Salaried,0.5,28000.0,3500.0,714.0,7,2,0,Debt Consolidation,170000.0,48,4600.0,Approved
+APP110933,2026-09-14,27,Male,Coimbatore,2,Gig / Contract,2.1,26000.0,5500.0,642.0,44,2,3,Wedding,230000.0,24,11000.0,Declined
+APP110965,2026-09-15,28,Male,Delhi,1,Self-Employed Professional,1.4,76000.0,9500.0,727.0,58,1,1,Wedding,410000.0,12,36800.0,Declined
+APP111013,2026-09-16,36,Male,Coimbatore,2,Salaried,7.0,47500.0,0.0,669.0,145,0,0,Debt Consolidation,145000.0,60,3400.0,Declined
+APP111022,2026-09-16,32,Male,Vijayawada,2,Salaried,0.6,23000.0,6000.0,795.0,103,5,0,Debt Consolidation,230000.0,60,5400.0,Approved
+APP111103,2026-09-17,32,Male,Madurai,3,Self-Employed Professional,2.9,58000.0,9500.0,682.0,62,2,1,Education,515000.0,60,12000.0,Approved
+APP111117,2026-09-17,28,Male,Bengaluru,1,Salaried,4.5,69000.0,10500.0,890.0,99,2,0,Wedding,165000.0,60,3800.0,Approved
+APP111140,2026-09-17,32,Male,Vijayawada,2,Business Owner,2.1,136000.0,7500.0,743.0,116,1,0,Debt Consolidation,1550000.0,12,139200.0,Declined
+APP111153,2026-09-18,32,Male,Bhubaneswar,2,Salaried,1.3,52500.0,0.0,769.0,79,0,0,Education,430000.0,60,10000.0,Approved
+APP111167,2026-09-18,24,Male,Delhi,1,Gig / Contract,0.5,18500.0,1000.0,512.0,65,1,1,Home Renovation,165000.0,36,5600.0,Declined
+APP111177,2026-09-18,34,Female,Madurai,3,Business Owner,3.0,53500.0,6500.0,790.0,100,1,0,Debt Consolidation,310000.0,36,10600.0,Approved
+APP111280,2026-09-20,41,Male,Delhi,1,Gig / Contract,2.0,31000.0,6500.0,685.0,204,4,2,Medical,135000.0,36,4600.0,Declined
+APP111288,2026-09-20,33,Female,Coimbatore,2,Gig / Contract,4.0,15500.0,0.0,642.0,181,0,1,Wedding,130000.0,12,11700.0,Declined
+APP111347,2026-09-20,30,Male,Delhi,1,Salaried,0.9,,13000.0,627.0,126,2,1,Home Renovation,220000.0,12,19800.0,Declined
+APP111361,2026-09-21,35,Female,Vijayawada,2,Self-Employed Professional,2.6,107000.0,13500.0,780.0,139,1,0,Education,740000.0,48,20200.0,Approved
+APP111369,2026-09-21,33,Male,Kochi,2,Salaried,0.4,66000.0,0.0,788.0,113,0,0,Debt Consolidation,225000.0,36,7700.0,Approved
+APP111586,2026-09-24,46,Male,Chennai,1,Salaried,8.3,127000.0,24500.0,743.0,263,2,0,Medical,315000.0,24,15100.0,Approved
+APP111669,2026-09-25,39,Male,Madurai,3,Salaried,4.8,30500.0,2000.0,696.0,189,1,1,Wedding,65000.0,60,1500.0,Approved
+APP111676,2026-09-25,21,Male,Coimbatore,2,Salaried,2.4,33000.0,4000.0,845.0,62,1,0,Debt Consolidation,120000.0,48,3300.0,Approved
+APP111710,2026-09-26,44,Male,Kolkata,1,Gig / Contract,4.0,80000.0,9500.0,740.0,236,1,0,Consumer Durables,370000.0,12,33200.0,Declined
+APP111749,2026-09-26,25,Male,Raipur,3,Salaried,4.9,22500.0,0.0,,0,0,0,Debt Consolidation,200000.0,48,5500.0,Approved
+APP111801,2026-09-27,25,Male,Kolkata,1,Gig / Contract,0.3,18000.0,2000.0,685.0,13,1,0,Debt Consolidation,225000.0,60,5200.0,Declined
+APP111812,2026-09-28,28,Female,Indore,2,Salaried,2.0,59000.0,12000.0,672.0,82,2,3,Travel,300000.0,24,14400.0,Declined
+APP111850,2026-09-28,35,Male,Pune,1,Salaried,3.9,59000.0,15000.0,682.0,144,2,1,Travel,265000.0,24,12700.0,Approved
+APP111946,2026-09-29,21,Female,Bengaluru,1,Self-Employed Professional,1.7,83000.0,17000.0,710.0,6,2,2,Debt Consolidation,680000.0,36,23200.0,Declined
