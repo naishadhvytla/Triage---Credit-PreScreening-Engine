@@ -123,7 +123,7 @@ main{padding-block:24px 56px}
 .check input{width:16px;height:16px;accent-color:var(--accent)}
 .presets{display:flex;gap:8px;flex-wrap:wrap}
 
-.verdict{position:sticky;top:calc(env(safe-area-inset-top,0px) + 78px);display:grid;gap:16px}
+.verdict{position:sticky;top:calc(env(safe-area-inset-top,0px) + var(--hdr-h,66px) + 12px);display:grid;gap:16px}
 .lane{border-radius:var(--r);padding:18px;border:1px solid}
 .lane.decline{background:var(--decline-wash);border-color:color-mix(in srgb,var(--decline) 35%,transparent)}
 .lane.review{background:var(--accent-wash);border-color:color-mix(in srgb,var(--accent) 30%,transparent)}
@@ -241,9 +241,9 @@ tr.cur td{background:var(--accent-wash)}
 .menu .who{padding:10px 12px 12px;border-bottom:1px solid var(--line);margin-bottom:6px}
 .menu .who b{display:block;font-size:14px}
 .menu .who span{font-size:12.5px;color:var(--muted);overflow-wrap:anywhere}
-.menu [role=menuitem]{display:flex;width:100%;align-items:center;gap:10px;background:none;border:0;text-align:left;padding:9px 12px;border-radius:var(--r-sm);cursor:pointer;font-size:14px;color:var(--ink);text-decoration:none}
-.menu [role=menuitem]:hover,.menu [role=menuitem]:focus-visible{background:var(--surface-2)}
-.menu [role=menuitem].danger{color:var(--decline)}
+.menu .mi{display:flex;width:100%;align-items:center;gap:10px;background:none;border:0;text-align:left;padding:9px 12px;border-radius:var(--r-sm);cursor:pointer;font-size:14px;color:var(--ink);text-decoration:none}
+.menu .mi:hover,.menu .mi:focus-visible{background:var(--surface-2)}
+.menu .mi.danger{color:var(--decline)}
 .menu hr{border:0;border-top:1px solid var(--line);margin:6px 0}
 .confirm{border:1px solid color-mix(in srgb,var(--decline) 40%,var(--line));background:var(--decline-wash);border-radius:var(--r-sm);padding:12px;margin:6px;font-size:13px}
 .confirm p{margin:0 0 8px;color:var(--ink)}
@@ -330,11 +330,12 @@ footer a{color:var(--muted)}
   .facts{grid-template-columns:repeat(2,minmax(0,1fr))}
   .steps,.limits{grid-template-columns:minmax(0,1fr)}
 }
+@media (max-width:1360px){.app-hdr .brand small{display:none}}
+@media (max-width:1100px){nav.tabs{order:3;flex:1 1 100%}}
 @media (max-width:640px){
   .stats3{grid-template-columns:minmax(0,1fr)}
   .hitem{grid-template-columns:minmax(0,1fr)}
   .hact{justify-content:flex-start}
-  nav.tabs{order:3;flex:1 1 100%}
 }
 @media (max-width:520px){
   .form{grid-template-columns:minmax(0,1fr)}

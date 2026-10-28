@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="en" class="auth-pending">
+<head>
+<title>Triage · Credit pre-screener</title>
+<meta name="description" content="Triage: a credit pre-screener that removes clear-cut personal-loan declines from manual review. Calibo AI Academy MUC02, Batch 10.">
+<meta name="robots" content="noindex">
+<!--#head-->
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="app-hdr">
+  <div class="wrap bar">
+    <a class="brand" href="/app" aria-label="Triage home">
+      <div class="mark" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 18 18"><path d="M2 3h14M4.5 9h9M7 15h4" stroke-width="2.2" stroke-linecap="round" fill="none"/></svg></div>
+      <div><b>Triage</b><small>Personal-loan pre-screening · Batch 10 · MUC02</small></div>
+    </a>
+    <span class="chip" id="polChip" title="Your saved policy">policy 0.90 · NTC → analyst</span>
+    <nav class="tabs" role="tablist" aria-label="Views" id="tabs">
+      <button role="tab" id="t-score" data-view="score" aria-controls="v-score" aria-selected="true">Score an application</button>
+      <button role="tab" id="t-threshold" data-view="threshold" aria-controls="v-threshold" aria-selected="false" tabindex="-1">Threshold</button>
+      <button role="tab" id="t-batch" data-view="batch" aria-controls="v-batch" aria-selected="false" tabindex="-1">Batch</button>
+      <button role="tab" id="t-history" data-view="history" aria-controls="v-history" aria-selected="false" tabindex="-1">History</button>
+      <button role="tab" id="t-model" data-view="model" aria-controls="v-model" aria-selected="false" tabindex="-1">About the model</button>
+    </nav>
+    <div class="hdr-actions">
+      <button class="icon-btn" type="button" data-theme-toggle aria-label="Theme"></button>
+      <div class="acct">
+        <button class="avatar" type="button" id="acctBtn" aria-expanded="false" aria-controls="acctMenu" aria-label="Account menu">?</button>
+        <div class="menu" id="acctMenu" hidden>
+          <div class="who"><b id="acctName">Signed in</b><span id="acctEmail"></span></div>
+          <div id="acctItems">
+            <button class="mi" type="button" data-goto="history">Saved history</button>
+            <button class="mi" type="button" data-goto="threshold">My policy</button>
+            <hr>
+            <button class="mi" type="button" id="signOut">Sign out</button>
+            <button class="mi danger" type="button" id="delOpen">Delete account…</button>
+          </div>
+          <div class="confirm" id="delPanel" hidden>
+            <p><b>Delete your account?</b> This permanently removes your sign-in, your policy, <span id="delCounts">your saved scorings and batches</span>, the uploaded files and the audit log. It cannot be undone.</p>
+            <div class="f"><label for="delType">Type DELETE to confirm</label><input id="delType" autocomplete="off" spellcheck="false" autocapitalize="characters"></div>
+            <div class="row"><button class="btn danger solid" type="button" id="delGo" disabled>Delete my account</button><button class="btn" type="button" id="delCancel">Cancel</button></div>
+            <p class="status bad" id="delStatus" role="alert"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap" id="main" tabindex="-1">
+<div class="banner warn" id="sysBanner" role="alert" hidden></div>
+
+<!-- ========== SCORE ========== -->
+<section id="v-score" role="tabpanel" aria-labelledby="t-score">
+  <div class="banner" id="openBanner" hidden><span id="openBannerText"></span><button class="btn" type="button" id="openBannerClose">Close</button></div>
+  <div class="lede">
+    <div>
+      <div class="eyebrow">Single application</div>
+      <h1>Should an analyst spend 25 minutes on this one?</h1>
+      <p>The model never approves. It only takes clear-cut declines out of the manual queue. Everything else, and every applicant with no credit history, goes to a credit analyst.</p>
+    </div>
+    <div class="presets" aria-label="Example applications">
+      <button class="btn" type="button" data-preset="decline">Example: clear decline</button>
+      <button class="btn" type="button" data-preset="border">Example: borderline</button>
+      <button class="btn" type="button" data-preset="ntc">Example: new to credit</button>
+    </div>
+  </div>
+
+  <div class="bench">
+    <div class="panel">
+      <div class="ph"><h2>Application</h2><span>Example values, edit any field</span></div>
+      <form class="pb form" id="appForm" autocomplete="off">
+        <div class="fieldset-title">Applicant</div>
+        <div class="f"><label for="age">Age</label><input id="age" type="number" min="18" max="75" value="31"></div>
+        <div class="f"><label for="employment_type">Employment type</label>
+          <select id="employment_type"><option>Salaried</option><option>Self-Employed Professional</option><option>Business Owner</option><option>Gig / Contract</option></select></div>
+        <div class="f"><label for="years_in_current_job">Years in current job / business</label><input id="years_in_current_job" type="number" step="0.1" min="0" value="2.4"></div>
+        <div class="f"><label for="city_tier">City tier</label>
+          <select id="city_tier"><option value="1">Tier 1 · metro</option><option value="2" selected>Tier 2 · large city</option><option value="3">Tier 3 · smaller city</option></select></div>
+
+        <div class="fieldset-title">Income &amp; credit</div>
+        <div class="f"><label for="monthly_income">Monthly income (₹)</label><input id="monthly_income" type="number" min="0" step="500" value="45000" aria-describedby="incHint"><span class="hint" id="incHint">Leave blank to use the median for this job type</span></div>
+        <div class="f"><label for="existing_emi">Existing EMIs per month (₹)</label><input id="existing_emi" type="number" min="0" step="500" value="7000"></div>
+        <div class="f"><label for="credit_score">Credit bureau score (300–900)</label><input id="credit_score" type="number" min="300" max="900" value="676"><label class="check" for="ntc"><input type="checkbox" id="ntc"> No credit history (new to credit)</label></div>
+        <div class="f"><label for="delinquencies_24m">Late / missed payments, last 24 months</label><input id="delinquencies_24m" type="number" min="0" value="1"></div>
+        <div class="f"><label for="num_active_loans">Active loans</label><input id="num_active_loans" type="number" min="0" value="2"></div>
+
+        <div class="fieldset-title">Loan requested</div>
+        <div class="f"><label for="loan_purpose">Purpose</label>
+          <select id="loan_purpose"><option>Debt Consolidation</option><option>Home Renovation</option><option>Wedding</option><option>Education</option><option>Consumer Durables</option><option>Medical</option><option>Travel</option></select></div>
+        <div class="f"><label for="loan_amount">Loan amount (₹)</label><input id="loan_amount" type="number" min="10000" step="5000" value="320000"></div>
+        <div class="f"><label for="tenure_months">Tenure (months)</label>
+          <select id="tenure_months"><option>12</option><option>24</option><option selected>36</option><option>48</option><option>60</option></select></div>
+        <div class="f"><label for="proposed_emi">Proposed EMI (₹)</label><input id="proposed_emi" type="number" disabled aria-describedby="emiHint"><span class="hint" id="emiHint">Calculated at 14% p.a., as in the bank's data</span></div>
+      </form>
+    </div>
+
+    <div class="verdict">
+      <div class="lane review" id="laneCard" aria-live="polite">
+        <span class="lane-tag" id="laneTag"><i></i><span>Analyst review</span></span>
+        <h3 id="laneTitle">Send to an analyst</h3>
+        <p id="laneText"></p>
+        <div class="prob">
+          <div class="prob-row"><span>Model confidence the credit team would decline</span><b id="probVal">0%</b></div>
+          <div class="track" aria-hidden="true"><div class="fill" id="probFill"></div><div class="tick" id="probTick"></div><span class="tick-l" id="probTickL"></span></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="ph"><h2>Save to history</h2><span id="scoreUsage"></span></div>
+        <div class="pb">
+          <div class="saverow">
+            <div class="f"><label for="note">Note <span class="hint">(optional)</span></label><input id="note" maxlength="500" placeholder="e.g. Branch 14 walk-in, file ref 2231"></div>
+            <button class="btn primary" type="button" id="saveScore">Save to history</button>
+          </div>
+          <p class="status" id="saveStatus" role="status"></p>
+        </div>
+      </div>
+
+      <div class="ratios">
+        <div class="ratio"><span>FOIR (EMIs ÷ income)</span><b id="rFoir">–</b><em id="rFoirE"></em></div>
+        <div class="ratio"><span>Loan ÷ annual income</span><b id="rLti">–</b><em id="rLtiE" class="flag-ok"></em></div>
+        <div class="ratio"><span>Credit score</span><b id="rScore">–</b><em id="rScoreE"></em></div>
+      </div>
+
+      <div class="panel">
+        <div class="ph"><h2>What moved this score</h2><span>Largest contributions</span></div>
+        <div class="pb">
+          <div class="drivers" id="drivers"></div>
+          <div class="legend"><span><i style="background:var(--series-2)"></i>Pushes towards decline</span><span><i style="background:var(--accent)"></i>Pulls towards approval</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== THRESHOLD ========== -->
+<section id="v-threshold" role="tabpanel" aria-labelledby="t-threshold" hidden>
+  <div class="lede">
+    <div>
+      <div class="eyebrow">Policy setting</div>
+      <h1>The bank sets the risk limit. The threshold follows from it.</h1>
+      <p>Move the threshold and see the trade-off on the 2,400 held-out test applications, scaled to 3,000 applications a month at 25 minutes of analyst time each. The bank's rule: at most 5% of automatic declines may be people the credit team would have approved.</p>
+    </div>
+  </div>
+
+  <div class="controls">
+    <div class="slider"><label for="thr" style="font-weight:500">Auto-decline at confidence ≥</label><input type="range" id="thr" min="0.5" max="0.99" step="0.01" value="0.90"><output id="thrOut" for="thr">0.90</output></div>
+    <label class="check" for="exNtc"><input type="checkbox" id="exNtc" checked> Send new-to-credit applicants to an analyst-only lane</label>
+    <span class="pill ok" id="rulePill">Within the 5% limit</span>
+  </div>
+
+  <div class="panel" style="margin-bottom:16px">
+    <div class="pb">
+      <div class="policybar">
+        <div style="margin-right:auto"><b>Your policy</b> <span class="num" id="polNow">0.90 · new to credit → analyst only</span><div class="note" id="ntcNote" style="margin-top:4px"></div></div>
+        <button class="btn" type="button" id="resetPolicy" hidden>Back to saved</button>
+        <button class="btn primary" type="button" id="savePolicy" disabled>Save as my policy</button>
+      </div>
+      <p class="status" id="polStatus" role="status"></p>
+    </div>
+  </div>
+
+  <div class="kpis">
+    <div class="kpi"><span>Auto-declined</span><b id="kPct">–</b><em id="kPctE"></em></div>
+    <div class="kpi"><span>Applications a month</span><b id="kApps">–</b><em>out of 3,000</em></div>
+    <div class="kpi"><span>Analyst hours freed</span><b id="kHrs">–</b><em>per month</em></div>
+    <div class="kpi"><span>Wrongly declined</span><b id="kWrong">–</b><em>of automatic declines</em></div>
+    <div class="kpi"><span>Good customers turned away</span><b id="kGood">–</b><em>per month, approx.</em></div>
+  </div>
+
+  <div class="grid2">
+    <div class="panel">
+      <div class="ph"><h2>Trade-off across thresholds</h2><span>Test set · hover for values</span></div>
+      <div class="pb">
+        <div class="chart-wrap" id="chartWrap"><svg id="chart" viewBox="0 0 640 300" role="img" aria-label="Line chart: share of applications auto-declined and share of those wrongly declined, by threshold"></svg><div class="tip" id="tip" hidden></div></div>
+        <div class="legend"><span><i style="background:var(--accent)"></i>% of applications auto-declined</span><span><i style="background:var(--series-2)"></i>% of auto-declines the bank approved</span><span><i style="background:var(--muted);height:2px"></i>5% risk limit</span></div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="ph"><h2>Fairness monitor</h2><span>At this threshold</span></div>
+      <div class="pb">
+        <div class="tscroll"><table>
+          <thead><tr><th>Group</th><th class="n">Auto-declined</th><th class="n">Bank approved</th></tr></thead>
+          <tbody id="fairBody"></tbody>
+        </table></div>
+        <p class="note">Gender is not a model input. Income and job type can still act as stand-ins, so the bank should report this table every month after launch.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel" style="margin-top:16px">
+    <div class="ph"><h2>Threshold table</h2><span>The brief's standard cut-offs</span></div>
+    <div class="pb tscroll">
+      <table><thead><tr><th>Threshold</th><th class="n">Auto-declined</th><th class="n">Wrongly declined</th><th class="n">Declines caught</th><th class="n">Apps / month</th><th class="n">Hours / month</th><th>5% rule</th></tr></thead><tbody id="thrBody"></tbody></table>
+    </div>
+  </div>
+</section>
+
+<!-- ========== BATCH ========== -->
+<section id="v-batch" role="tabpanel" aria-labelledby="t-batch" hidden>
+  <div class="banner" id="batchBanner" hidden><span id="batchBannerText"></span><button class="btn" type="button" id="batchRescore" hidden>Re-score with my policy</button></div>
+  <div class="lede">
+    <div>
+      <div class="eyebrow">Daily intake</div>
+      <h1>Triage a whole intake file</h1>
+      <p>Upload a CSV with the same columns as the bank's application data. Triage applies the team's cleaning rules, scores every row in your browser and sorts it into a lane. The file is kept privately in your account so you can re-open it from History. Nobody else can read it.</p>
+    </div>
+  </div>
+  <div class="drop" id="drop">
+    <p id="dropMsg"><b>Showing the sample batch:</b> 240 applications drawn from the team dataset.</p>
+    <div class="presets">
+      <label class="btn primary file-label" for="file" style="cursor:pointer">Upload CSV<input type="file" id="file" accept=".csv,text/csv" class="sr-only"></label>
+      <button class="btn" type="button" id="loadSample">Reload sample</button>
+    </div>
+  </div>
+  <p class="err" id="batchErr" role="alert" hidden></p>
+  <p class="status" id="batchStatus" role="status"></p>
+
+  <div class="grid2" style="margin-top:8px">
+    <div class="panel">
+      <div class="ph"><h2>Lanes</h2><span id="batchThr"></span></div>
+      <div class="pb">
+        <div class="lanebar" id="laneBar" aria-hidden="true"></div>
+        <div class="tscroll"><table><thead><tr><th>Lane</th><th class="n">Applications</th><th class="n">Share</th></tr></thead><tbody id="laneBody"></tbody></table></div>
+        <p class="note" id="laneHours"></p>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="ph"><h2>Checks against the file</h2><span>When the file has these columns</span></div>
+      <div class="pb tscroll"><table><tbody id="checkBody"></tbody></table></div>
+    </div>
+  </div>
+
+  <div class="panel" style="margin-top:16px">
+    <div class="ph"><h2>Scored applications</h2><span><button class="btn" type="button" id="dlCsv">Download scored CSV</button> <button class="btn" type="button" id="cpCsv">Copy CSV</button></span></div>
+    <div class="pb tscroll"><table><thead><tr><th>Application</th><th>Employment</th><th class="n">Income ₹</th><th class="n">Score</th><th class="n">FOIR</th><th class="n">Late pmts</th><th class="n">Decline conf.</th><th>Lane</th><th>Bank decision</th></tr></thead><tbody id="rowBody"></tbody></table></div>
+    <p class="note" id="rowNote" style="padding:0 18px 16px"></p>
+  </div>
+</section>
+
+<!-- ========== HISTORY ========== -->
+<section id="v-history" role="tabpanel" aria-labelledby="t-history" hidden>
+  <div class="lede">
+    <div>
+      <div class="eyebrow">Saved work</div>
+      <h1>Your history</h1>
+      <p>Scorings you saved and intake files you triaged. Re-open one to see it again, or delete it to free a slot. Only you can see these.</p>
+    </div>
+    <div class="usage" id="usage" aria-live="polite"></div>
+  </div>
+  <div class="hist-tools">
+    <div class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <label class="sr-only" for="hSearch">Search history</label><input type="search" id="hSearch" placeholder="Search notes, files, lanes, job types…" autocomplete="off"></div>
+    <div class="seg" role="group" aria-label="Show">
+      <button type="button" data-filter="all" aria-pressed="true">All</button>
+      <button type="button" data-filter="scoring" aria-pressed="false">Scorings</button>
+      <button type="button" data-filter="batch" aria-pressed="false">Batches</button>
+    </div>
+  </div>
+  <p class="status" id="hStatus" role="status"></p>
+  <ul class="hlist" id="hList" aria-label="Saved items"></ul>
+</section>
+
+<!-- ========== MODEL ========== -->
+<section id="v-model" role="tabpanel" aria-labelledby="t-model" hidden>
+  <div class="lede">
+    <div>
+      <div class="eyebrow">Model card</div>
+      <h1>What Triage learned, and where it should not be trusted</h1>
+      <p>A logistic regression trained on 9,600 of the bank's April–September 2026 personal-loan decisions and tested on the other 2,400.</p>
+    </div>
+  </div>
+  <div class="facts" id="facts"></div>
+  <div class="grid2" style="margin-top:16px">
+    <div class="panel">
+      <div class="ph"><h2>Coefficients</h2><span>Scaled features · + pushes towards decline</span></div>
+      <div class="pb"><div class="drivers" id="coefList"></div></div>
+    </div>
+    <div class="panel">
+      <div class="ph"><h2>At the default 0.5 cut-off</h2><span>Test set</span></div>
+      <div class="pb tscroll"><table id="cmTable"></table>
+      <p class="note">At 0.5 the model would decline 225 applicants the bank approved. That is why Triage only auto-declines at a much higher confidence.</p></div>
+    </div>
+  </div>
+  <div class="panel" style="margin-top:16px"><div class="pb prose">
+    <h3 style="margin-top:0">How the lanes work</h3>
+    <p><b>Auto-decline</b> only when the model's decline confidence is at or above the threshold <i>and</i> the applicant has a bureau score. <b>Analyst review</b> for everything else. <b>Analyst only</b> for new-to-credit applicants: the model is right only 56.7% of the time for them (81.2% for scored applicants), and at 0.90 half of those it would auto-decline were approved by the bank.</p>
+    <h3>Cleaning applied to every input</h3>
+    <ul>
+      <li>Monthly incomes above ₹6,00,000 are treated as annual salaries keyed into the monthly field and divided by 12.</li>
+      <li>A blank income is filled with the median for that employment type.</li>
+      <li>A blank credit score means no credit history. The applicant is flagged as new to credit, and the median score fills the gap only inside the model.</li>
+    </ul>
+    <h3>Limitations</h3>
+    <ul>
+      <li>The model learned to copy <b>past analyst decisions, not repayment</b>. Any mistakes or bias in those decisions are built in. Link decisions to repayment outcomes before relying on it.</li>
+      <li>Trained on six months of one bank's simulated data. Re-test on newer applications before live use.</li>
+      <li>Coursework for Calibo AI Academy (Path 2, KLU). The model makes no lending decision about real people.</li>
+    </ul>
+  </div></div>
+</section>
+</main>
+
+<footer><div class="wrap">Triage · Batch 10 · Calibo AI Academy MUC02 · scoring runs in your browser · model <span class="num" id="footVer"></span> · <a href="/">About Triage</a></div></footer>
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+<!--#model-->
+<!--#sample-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js" integrity="sha384-D/t0ZMqQW31H3az8ktEiNb39wyKnS82iFY52QPACM+IjKW3jDUhyIgh2PApRqJZs" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js" integrity="sha384-0w2KAL2YHP6wKOkUDzkCDGgVvfmHnj02DHeQ6XcHOgTfFsGyonKOpShMH1x6nk9o" crossorigin="anonymous"></script>
+<script src="/config.js"></script>
+<script src="/js/supa.js"></script>
+<script src="/js/model.js"></script>
+<script src="/js/app.js"></script>
+</body>
+</html>
