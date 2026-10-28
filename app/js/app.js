@@ -40,7 +40,7 @@
   }
 
   // ---------- tabs (arrow keys move between tabs) ----------
-  const views = ["score", "threshold", "batch", "history", "model"];
+  const views = ["score", "threshold", "batch", "report", "history", "model"];
   function show(v, focusTab) {
     if (!views.includes(v)) v = "score";
     views.forEach(x => {
@@ -52,6 +52,7 @@
     if (location.hash !== "#" + v) history.replaceState(null, "", "#" + v);
     if (v === "threshold") drawThreshold();
     if (v === "history") loadHistory();
+    if (v === "report") renderReport();
   }
   document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => show(b.dataset.view)));
   F("tabs").addEventListener("keydown", e => {
@@ -305,6 +306,7 @@
     F("rowBody").innerHTML = top.map(r => `<tr><td class="num">${esc(r._id)}</td><td>${esc(r.employment_type)}</td><td class="n">${Math.round(r._inc).toLocaleString("en-IN")}</td><td class="n">${esc(r.credit_score ?? "–")}</td><td class="n">${pct(r._foir, 0)}</td><td class="n">${esc(r.delinquencies_24m)}</td><td class="n">${pct(r._p, 0)}</td><td><span class="tag ${r._lane}">${LANE[r._lane]}</span></td><td>${esc(r.decision ?? "–")}</td></tr>`).join("");
     F("rowNote").textContent = `Showing the ${top.length} applications with the highest decline confidence. The download includes all ${n}.`;
     paintBatchBanner();
+    if (!F("v-report").hidden) renderReport();
   }
 
   function paintBatchBanner() {
@@ -329,13 +331,13 @@
     return Papa.unparse(current.rows.map(r => { const o = {}; for (const k in r) if (!k.startsWith("_")) o[k] = r[k];
       o.decline_confidence = +r._p.toFixed(4); o.foir = +r._foir.toFixed(4); o.lane = LANE[r._lane]; return o; }));
   }
-  function downloadScored() {
-    if (!current) return;
-    const base = String(current.label || "batch").replace(/\.csv$/i, "").replace(/[^\w.-]+/g, "_").slice(0, 60) || "batch";
-    const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([scoredCsv()], {type: "text/csv"}));
-    a.download = `${base}_scored.csv`; document.body.appendChild(a); a.click(); a.remove();
+  function saveFile(name, text, type) {
+    const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([text], {type}));
+    a.download = name; document.body.appendChild(a); a.click(); a.remove();
     setTimeout(() => URL.revokeObjectURL(a.href), 5000);
   }
+  const fileBase = () => String(current && current.label || "batch").replace(/\.csv$/i, "").replace(/[^\w.-]+/g, "_").slice(0, 60) || "batch";
+  function downloadScored() { if (current) saveFile(`${fileBase()}_scored.csv`, scoredCsv(), "text/csv"); }
   F("dlCsv").addEventListener("click", downloadScored);
   F("cpCsv").addEventListener("click", async e => {
     const b = e.currentTarget; try { await navigator.clipboard.writeText(scoredCsv()); b.textContent = "Copied"; } catch (err) { b.textContent = "Copy blocked here. Use Download"; }
@@ -383,6 +385,35 @@
   ["dragenter", "dragover"].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add("over"); }));
   ["dragleave", "drop"].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove("over"); }));
   drop.addEventListener("drop", e => { const f = e.dataTransfer.files[0]; if (f) handleFile(f); });
+
+  // ---------- report (Clarity-style: visual summary, then the numbered analyst report) ----------
+  let reportModel = null;
+  function renderReport() {
+    if (!current) { F("reportBody").innerHTML = '<div class="empty"><b>No batch yet</b>Upload an intake file on the Batch tab.</div>'; reportModel = null; return; }
+    reportModel = window.TriageReport.build(current, M, MODEL, {author: F("acctName").textContent || (user && user.email) || ""});
+    F("reportBody").innerHTML = window.TriageReport.html(reportModel);
+    F("repSource").textContent = current.isSample ? "the sample batch" : current.label + (current.saved ? " (saved)" : "");
+  }
+  F("repMd").addEventListener("click", () => { if (reportModel) { saveFile(`${fileBase()}_report.md`, window.TriageReport.markdown(reportModel), "text/markdown"); toast("Report exported as Markdown."); } });
+  F("repHtml").addEventListener("click", async () => {
+    if (!reportModel) return;
+    let styles = "";
+    try { styles = await (await fetch("/css/triage.css")).text(); } catch (e) { status("repStatus", "Couldn't load the styles for the HTML export. Try again.", "bad"); return; }
+    const doc = `<!doctype html>\n<html lang="en" data-theme="light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Triage report · ${esc(reportModel.file)}</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Sans+Condensed:wght@500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>${styles}\nbody{padding:32px 0}</style></head>
+<body><main class="wrap"><div class="report">${window.TriageReport.html(reportModel)}</div></main></body></html>`;
+    saveFile(`${fileBase()}_report.html`, doc, "text/html");
+    toast("Report exported as HTML.");
+  });
+  F("repPrint").addEventListener("click", () => {
+    if (!reportModel) return;
+    document.body.classList.add("print-report");
+    window.print();
+  });
+  window.addEventListener("afterprint", () => document.body.classList.remove("print-report"));
+  F("repCsv").addEventListener("click", downloadScored);
 
   // ---------- history ----------
   async function fetchHistory() {
@@ -458,7 +489,7 @@
         <div class="hmeta"><span><span class="num">${b.row_count}</span> applications</span><span><span class="num">${lc.decline ?? 0}</span> auto-declined · <span class="num">${lc.review ?? 0}</span> review · <span class="num">${lc.human ?? 0}</span> new to credit</span>
         ${b.wrong_decline_rate !== null && b.wrong_decline_rate !== undefined ? `<span><span class="num">${pct(b.wrong_decline_rate)}</span> wrongly declined</span>` : ""}
         <span>threshold <span class="num">${(+b.threshold).toFixed(2)}</span></span><span>${fmtDate(b.created_at)}</span></div></div>
-      ${actions(b.id, "batch", '<button class="btn" type="button" data-act="open">Re-open</button><button class="btn" type="button" data-act="download">Download scored CSV</button>')}</li>`;
+      ${actions(b.id, "batch", '<button class="btn" type="button" data-act="open">Re-open</button><button class="btn" type="button" data-act="report">Report</button><button class="btn" type="button" data-act="download">Download scored CSV</button>')}</li>`;
   }
 
   F("hSearch").addEventListener("input", e => { hist.q = e.target.value; renderHistory(); });
@@ -484,6 +515,7 @@
     if (act === "confirm") return deleteItem(kind, rec, btn, li);
     if (act === "open") return kind === "scoring" ? openScoring(rec) : openBatch(rec, btn);
     if (act === "download") { const ok = await openBatch(rec, btn, {stay: true}); if (ok) downloadScored(); }
+    if (act === "report") { const ok = await openBatch(rec, btn, {stay: true}); if (ok) { show("report"); F("main").focus({preventScroll: true}); } }
   });
 
   async function deleteItem(kind, rec, btn, li) {

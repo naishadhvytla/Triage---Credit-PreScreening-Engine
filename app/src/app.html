@@ -19,6 +19,7 @@
       <button role="tab" id="t-score" data-view="score" aria-controls="v-score" aria-selected="true">Score an application</button>
       <button role="tab" id="t-threshold" data-view="threshold" aria-controls="v-threshold" aria-selected="false" tabindex="-1">Threshold</button>
       <button role="tab" id="t-batch" data-view="batch" aria-controls="v-batch" aria-selected="false" tabindex="-1">Batch</button>
+      <button role="tab" id="t-report" data-view="report" aria-controls="v-report" aria-selected="false" tabindex="-1">Report</button>
       <button role="tab" id="t-history" data-view="history" aria-controls="v-history" aria-selected="false" tabindex="-1">History</button>
       <button role="tab" id="t-model" data-view="model" aria-controls="v-model" aria-selected="false" tabindex="-1">About the model</button>
     </nav>
@@ -239,6 +240,25 @@
   </div>
 </section>
 
+<!-- ========== REPORT ========== -->
+<section id="v-report" role="tabpanel" aria-labelledby="t-report" hidden>
+  <div class="lede no-print">
+    <div>
+      <div class="eyebrow">Report</div>
+      <h1>Intake report</h1>
+      <p>A visual summary first, the detailed analyst report below, for the batch on the Batch tab: <b id="repSource">the sample batch</b>. Upload a file, or re-open a saved batch from History, to report on it.</p>
+    </div>
+    <div class="presets" aria-label="Export the report">
+      <button class="btn" type="button" id="repMd">Markdown</button>
+      <button class="btn" type="button" id="repHtml">Visual HTML</button>
+      <button class="btn" type="button" id="repPrint">Print / PDF</button>
+      <button class="btn primary" type="button" id="repCsv">Scored CSV</button>
+    </div>
+  </div>
+  <p class="status no-print" id="repStatus" role="status"></p>
+  <div class="report" id="reportBody"></div>
+</section>
+
 <!-- ========== HISTORY ========== -->
 <section id="v-history" role="tabpanel" aria-labelledby="t-history" hidden>
   <div class="lede">
@@ -312,6 +332,7 @@
 <script src="/config.js"></script>
 <script src="/js/supa.js"></script>
 <script src="/js/model.js"></script>
+<script src="/js/report.js"></script>
 <script src="/js/app.js"></script>
 </body>
 </html>

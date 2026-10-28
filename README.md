@@ -22,6 +22,7 @@ Coursework for Calibo AI Academy MUC02 · Batch 10 · Path 2, KLU. A sibling of 
   - **Score**: one application → lane, confidence, ratios, the factors that moved the score. *Save to history* with an optional note.
   - **Threshold**: the trade-off explorer and fairness monitor. *Save as my policy* stores your threshold and new-to-credit routing; Score and Batch then use it.
   - **Batch**: upload an intake CSV. It is scored in the browser, stored privately in your Storage folder, and the summary is saved as a batch record. Download the scored CSV.
+  - **Report**: a Clarity-style report for the current batch. A visual summary first (KPIs, the 5% rule, lanes, confidence histogram, key findings), then a numbered analyst report (policy, data checks, lane outcomes, check against the bank's decisions, fairness, employment types, top declines, recommendations, limitations). Export as Markdown, visual HTML, Print / PDF, or the scored CSV. Saved batches get a **Report** button in History.
   - **History**: your saved scorings and batches. Search, re-open, delete.
   - **About the model**: the model card.
   - **Account menu**: email, sign out, delete account (with an inline type-DELETE confirmation).
@@ -140,7 +141,7 @@ app/                    published by Netlify
   index.html login.html app.html 404.html   built pages (from app/src)
   config.js config.example.js               Supabase URL + anon key
   model.json sample_batch.csv
-  css/triage.css  js/{model,supa,theme,landing,login,app}.js
+  css/triage.css  js/{model,supa,theme,landing,login,app,report}.js
   src/                  page templates + build.py (not served)
 model/train_export.py   retrain + export
 model/parity_fixture.json

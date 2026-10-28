@@ -94,6 +94,22 @@ test("batch upload of sample_batch.csv → lane counts shown, saved, then delete
   await expect(page.locator("#toast")).toContainText("Batch and its file deleted");
 });
 
+test("report tab summarises the current batch and exports it", async ({page}) => {
+  await signIn(page);
+  await page.getByRole("tab", {name: "Report"}).click();
+  await expect(page.locator("#repSource")).toHaveText("the sample batch");
+  const thr = await page.locator(".rp-sub").textContent();
+  const [, t, route] = thr.match(/threshold ([\d.]+) · new to credit → (analyst only|analyst queue)/);
+  const want = expectedLanes(+t, route === "analyst only");
+  await expect(page.locator(".rp-kpi b").nth(1)).toHaveText(String(want.decline));
+  await expect(page.locator(".rp-doc h2")).toHaveCount(10);
+  await expect(page.locator(".rp-finding").first()).toContainText(`${want.decline} of 240 applications`);
+  const [md] = await Promise.all([page.waitForEvent("download"), page.getByRole("button", {name: "Markdown"}).click()]);
+  expect(md.suggestedFilename()).toBe("Sample_batch_report.md");
+  const [html] = await Promise.all([page.waitForEvent("download"), page.getByRole("button", {name: "Visual HTML"}).click()]);
+  expect(html.suggestedFilename()).toBe("Sample_batch_report.html");
+});
+
 test("sign out returns to /login and the app is closed again", async ({page}) => {
   await signIn(page);
   await page.locator("#acctBtn").click();
