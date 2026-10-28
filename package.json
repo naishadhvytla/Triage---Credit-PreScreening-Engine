@@ -1,0 +1,15 @@
+{
+  "name": "triage",
+  "private": true,
+  "description": "Triage credit pre-screener: static site + Supabase. Node is only used for tests.",
+  "scripts": {
+    "build": "python3 app/src/build.py",
+    "serve": "node tests/serve.mjs",
+    "test": "node tests/parity.mjs",
+    "test:db": "bash tests/db/run.sh",
+    "test:e2e": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.63.0"
+  }
+}
