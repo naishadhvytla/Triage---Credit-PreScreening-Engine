@@ -21,7 +21,7 @@
 
   let user = null, leaving = false;
   let policy = M.defaultPolicy();      // the saved policy in force (default until loaded)
-  const hist = {loaded: false, loading: null, scorings: [], batches: [], filter: "all", q: ""};
+  const hist = {loaded: false, loading: null, scorings: [], batches: [], filter: "all", q: "", confirming: null};
 
   // ---------- small UI helpers ----------
   function status(id, text, kind) { const el = F(id); el.className = "status" + (kind ? " " + kind : ""); el.innerHTML = text || ""; }
@@ -444,7 +444,12 @@
       <div><h3><span class="tag ${s.lane}">${LANE[s.lane]}</span> <span class="num">${Math.round(s.probability * 100)}%</span> decline confidence</h3>
         <div class="hmeta"><span>${esc(what)}</span><span>${fmtDate(s.created_at)}</span>${s.threshold ? `<span>threshold <span class="num">${(+s.threshold).toFixed(2)}</span></span>` : ""}${old ? `<span class="flag-warn">model ${esc(s.model_version)}</span>` : ""}</div>
         ${s.note ? `<div class="hnote">${esc(s.note)}</div>` : ""}</div>
-      <div class="hact"><button class="btn" type="button" data-act="open">Re-open</button><button class="btn danger" type="button" data-act="delete">Delete</button></div></li>`;
+      ${actions(s.id, "scoring", '<button class="btn" type="button" data-act="open">Re-open</button>')}</li>`;
+  }
+  // A pending delete confirmation is part of the history state, so a background refresh re-renders it instead of losing it
+  function actions(id, kind, extra) {
+    if (hist.confirming === id) return `<div class="hact"><span style="font-size:13px;color:var(--ink);align-self:center">Delete this ${kind}?</span><button class="btn danger solid" type="button" data-act="confirm">Yes, delete</button><button class="btn" type="button" data-act="cancel">Cancel</button></div>`;
+    return `<div class="hact">${extra}<button class="btn danger" type="button" data-act="delete">Delete</button></div>`;
   }
   function batchItem(b) {
     const lc = b.lane_counts || {};
@@ -453,7 +458,7 @@
         <div class="hmeta"><span><span class="num">${b.row_count}</span> applications</span><span><span class="num">${lc.decline ?? 0}</span> auto-declined · <span class="num">${lc.review ?? 0}</span> review · <span class="num">${lc.human ?? 0}</span> new to credit</span>
         ${b.wrong_decline_rate !== null && b.wrong_decline_rate !== undefined ? `<span><span class="num">${pct(b.wrong_decline_rate)}</span> wrongly declined</span>` : ""}
         <span>threshold <span class="num">${(+b.threshold).toFixed(2)}</span></span><span>${fmtDate(b.created_at)}</span></div></div>
-      <div class="hact"><button class="btn" type="button" data-act="open">Re-open</button><button class="btn" type="button" data-act="download">Download scored CSV</button><button class="btn danger" type="button" data-act="delete">Delete</button></div></li>`;
+      ${actions(b.id, "batch", '<button class="btn" type="button" data-act="open">Re-open</button><button class="btn" type="button" data-act="download">Download scored CSV</button>')}</li>`;
   }
 
   F("hSearch").addEventListener("input", e => { hist.q = e.target.value; renderHistory(); });
@@ -469,14 +474,13 @@
     const rec = (kind === "scoring" ? hist.scorings : hist.batches).find(r => r.id === id);
     if (!rec) return;
     const act = btn.dataset.act;
-    if (act === "delete") {   // inline confirmation instead of confirm()
-      const box = li.querySelector(".hact");
-      box.dataset.html = box.innerHTML;
-      box.innerHTML = `<span style="font-size:13px;color:var(--ink);align-self:center">Delete this ${kind}?</span><button class="btn danger solid" type="button" data-act="confirm">Yes, delete</button><button class="btn" type="button" data-act="cancel">Cancel</button>`;
-      box.querySelector('[data-act="confirm"]').focus();
+    if (act === "delete" || act === "cancel") {   // inline confirmation instead of confirm()
+      hist.confirming = act === "delete" ? id : null;
+      renderHistory();
+      const again = F("hList").querySelector(`[data-id="${id}"] [data-act="${act === "delete" ? "confirm" : "delete"}"]`);
+      if (again) again.focus();
       return;
     }
-    if (act === "cancel") { const box = li.querySelector(".hact"); box.innerHTML = box.dataset.html; box.querySelector('[data-act="delete"]').focus(); return; }
     if (act === "confirm") return deleteItem(kind, rec, btn, li);
     if (act === "open") return kind === "scoring" ? openScoring(rec) : openBatch(rec, btn);
     if (act === "download") { const ok = await openBatch(rec, btn, {stay: true}); if (ok) downloadScored(); }
@@ -489,6 +493,7 @@
       const {error} = await B.client.from(kind === "scoring" ? "scorings" : "batches").delete().eq("id", rec.id);
       if (error) throw error;
       if (kind === "scoring") hist.scorings = hist.scorings.filter(r => r.id !== rec.id); else hist.batches = hist.batches.filter(r => r.id !== rec.id);
+      hist.confirming = null;
       if (current && current.saved && current.saved.id === rec.id) { current.saved = null; paintBatchBanner(); }
       const next = li.nextElementSibling || li.previousElementSibling;
       renderHistory();
