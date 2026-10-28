@@ -10,6 +10,8 @@ Triage takes clear-cut personal-loan declines out of the manual review queue, so
 
 At the default 0.90 threshold, on 2,400 held-out applications scaled to 3,000 a month: **441 applications** a month auto-declined · **184 analyst hours** freed · **3.1%** of auto-declines were people the bank approved (its limit is 5%).
 
+**Live:** https://triagecreditscreener.netlify.app
+
 Coursework for Calibo AI Academy MUC02 · Batch 10 · Path 2, KLU. A sibling of [Clarity](https://clarityeda.netlify.app).
 
 ## What's in it
@@ -71,8 +73,8 @@ flowchart LR
 2. **SQL Editor → New query**: paste all of [`supabase/schema.sql`](supabase/schema.sql) and run it. It is idempotent, so re-running it after edits is safe and never drops data. It creates the tables, row-level security, limit and audit triggers, the `delete_account()` function and the private `intake` Storage bucket with per-user folder policies.
 3. **Authentication → Sign In / Providers → Google**: enable it, paste a Google OAuth client ID and secret, and add the callback URL Supabase shows there to the client's *Authorised redirect URIs* in Google Cloud Console.
 4. **Authentication → URL Configuration**:
-   - **Site URL**: your Netlify URL, e.g. `https://<your-site>.netlify.app`
-   - **Redirect URLs**: `https://<your-site>.netlify.app/**` (sign-up confirmation, password reset and Google all return to `/app` or `/login`). Add `http://127.0.0.1:4173/**` to test locally.
+   - **Site URL**: `https://triagecreditscreener.netlify.app`
+   - **Redirect URLs**: `https://triagecreditscreener.netlify.app/**` (sign-up confirmation, password reset and Google all return to `/app` or `/login`). Add `http://127.0.0.1:4173/**` to test locally.
 
 ### 2. Config
 
