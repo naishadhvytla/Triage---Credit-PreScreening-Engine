@@ -1,0 +1,48 @@
+# Deploy Triage from the repo.
+# In Netlify: connect this repo, leave the build command blank, publish directory "app".
+# Pages are pre-built and committed (python app/src/build.py), so Netlify serves files as they are.
+[build]
+  publish = "app"
+  command = ""
+
+# Pretty URLs: /login and /app serve the .html pages (query strings and #hashes are kept)
+[[redirects]]
+  from = "/login"
+  to = "/login.html"
+  status = 200
+
+[[redirects]]
+  from = "/app"
+  to = "/app.html"
+  status = 200
+
+[[redirects]]
+  from = "/signup"
+  to = "/login?mode=signup"
+  status = 301
+
+# Build templates are not part of the site
+[[redirects]]
+  from = "/src/*"
+  to = "/404.html"
+  status = 404
+  force = true
+
+# Security headers on every response. The CSP allows only this site, the two script CDNs,
+# Google Fonts, and the Supabase project in app/config.js. If you change projects, update both URLs below.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Content-Security-Policy = "default-src 'self'; script-src 'self' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self' https://mvfukpufljkxjjhymtoa.supabase.co wss://mvfukpufljkxjjhymtoa.supabase.co; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'"
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains"
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=(), payment=(), usb=()"
+    Cross-Origin-Opener-Policy = "same-origin"
+
+# Signed-in pages and config should never be cached by shared caches
+[[headers]]
+  for = "/app*"
+  [headers.values]
+    Cache-Control = "no-store"
